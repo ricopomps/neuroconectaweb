@@ -1,4 +1,5 @@
 import { Header } from "@/components/header/header";
+import { CardsList } from "@/components/institution/cards-list";
 import { Button } from "@/components/ui/button";
 import { AppRoutes } from "@/lib/routes";
 import Link from "next/link";
@@ -11,6 +12,7 @@ export default function HomePage() {
       <Link href={AppRoutes.LOGIN}>
         <Button className="w-full">Faça o Login!</Button>
       </Link>
+      <CardsList />
       {/* </div> */}
     </div>
   );
