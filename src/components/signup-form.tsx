@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,23 +15,49 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { AppRoutes } from "@/lib/routes";
+import { SignupRequest } from "@/lib/validation/user";
+import * as userApi from "@/network/api/user";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
+async function onSubmit(data: SignupRequest) {
+  console.log("Signup data:", data);
+  console.log(data);
+  try {
+    const signupResponse = await userApi.create(data);
+    if (signupResponse?.id) {
+      toast.success("Cadastro realizado com sucesso!");
+    }
+  } catch (error) {
+    if (error instanceof Error)
+      toast.error(error.message || "Erro ao cadastrar");
+  }
+}
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
+  const { register, handleSubmit } = useForm<SignupRequest>({});
+
   return (
     <Card {...props}>
       <CardHeader>
-        <CardTitle>Create an account</CardTitle>
+        <CardTitle>Crie sua conta</CardTitle>
         <CardDescription>
-          Enter your information below to create your account
+          Coloque suas informações abaixo para criar uma nova conta.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <FieldGroup>
             <Field>
-              <FieldLabel htmlFor="name">Full Name</FieldLabel>
-              <Input id="name" type="text" placeholder="John Doe" required />
+              <FieldLabel htmlFor="name">Nome</FieldLabel>
+              <Input
+                id="name"
+                type="text"
+                placeholder="Nome"
+                required
+                {...register("name", { required: "Nome é obrigatório" })}
+              />
             </Field>
             <Field>
               <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -39,35 +66,45 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                 type="email"
                 placeholder="m@example.com"
                 required
+                {...register("email", { required: "Email é obrigatório" })}
               />
               <FieldDescription>
-                We&apos;ll use this to contact you. We will not share your email
-                with anyone else.
+                Esse e-mail será usado para contato e login na sua conta.
               </FieldDescription>
             </Field>
             <Field>
-              <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input id="password" type="password" required />
+              <FieldLabel htmlFor="password">Senha</FieldLabel>
+              <Input
+                id="password"
+                type="password"
+                required
+                {...register("password", { required: "Senha é obrigatória" })}
+              />
               <FieldDescription>
-                Must be at least 8 characters long.
+                No mínimo 8 caracteres, incluindo letras e números.
               </FieldDescription>
             </Field>
             <Field>
               <FieldLabel htmlFor="confirm-password">
-                Confirm Password
+                Confirme a senha
               </FieldLabel>
-              <Input id="confirm-password" type="password" required />
-              <FieldDescription>Please confirm your password.</FieldDescription>
+              <Input
+                id="confirm-password"
+                type="password"
+                required
+                {...register("confirmPassword", {
+                  required: "Confirmação de senha é obrigatória",
+                })}
+              />
+              <FieldDescription>
+                Por favor, confirme sua senha.
+              </FieldDescription>
             </Field>
             <FieldGroup>
               <Field>
-                <Button type="submit">Create Account</Button>
-                <Button variant="outline" type="button">
-                  Sign up with Google
-                </Button>
+                <Button type="submit">Criar conta</Button>
                 <FieldDescription className="px-6 text-center">
-                  Already have an account?{" "}
-                  <Link href={AppRoutes.LOGIN}>Sign in</Link>
+                  Já tem uma conta? <Link href={AppRoutes.LOGIN}>Entrar</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>
