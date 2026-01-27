@@ -13,6 +13,17 @@ const axiosInstace = axios.create({
   withCredentials: true,
 });
 
+// Adicionar token automaticamente em todas as requisições
+axiosInstace.interceptors.request.use((config) => {
+  if (globalThis.window !== undefined) {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  }
+  return config;
+});
+
 axiosInstace.interceptors.response.use(null, (error) => {
   if (axios.isAxiosError(error)) {
     const errorMessage = error.response?.data?.error;

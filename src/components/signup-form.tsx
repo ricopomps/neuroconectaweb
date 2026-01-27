@@ -18,25 +18,30 @@ import { AppRoutes } from "@/lib/routes";
 import { SignupRequest } from "@/lib/validation/user";
 import * as userApi from "@/network/api/user";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-async function onSubmit(data: SignupRequest) {
-  console.log("Signup data:", data);
-  console.log(data);
-  try {
-    const signupResponse = await userApi.create(data);
-    if (signupResponse?.id) {
-      toast.success("Cadastro realizado com sucesso!");
-    }
-  } catch (error) {
-    if (error instanceof Error)
-      toast.error(error.message || "Erro ao cadastrar");
-  }
-}
-
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
-  const { register, handleSubmit } = useForm<SignupRequest>({});
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<SignupRequest>({});
+
+  async function onSubmit(data: SignupRequest) {
+    try {
+      const signupResponse = await userApi.create(data);
+      if (signupResponse?.id) {
+        toast.success("Cadastro realizado com sucesso!");
+        router.push(AppRoutes.LOGIN);
+      }
+    } catch (error) {
+      if (error instanceof Error)
+        toast.error(error.message || "Erro ao cadastrar");
+    }
+  }
 
   return (
     <Card {...props}>
@@ -56,6 +61,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                 type="text"
                 placeholder="Nome"
                 required
+                disabled={isSubmitting}
                 {...register("name", { required: "Nome é obrigatório" })}
               />
             </Field>
@@ -66,6 +72,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                 type="email"
                 placeholder="m@example.com"
                 required
+                disabled={isSubmitting}
                 {...register("email", { required: "Email é obrigatório" })}
               />
               <FieldDescription>
@@ -78,6 +85,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                 id="password"
                 type="password"
                 required
+                disabled={isSubmitting}
                 {...register("password", { required: "Senha é obrigatória" })}
               />
               <FieldDescription>
@@ -92,6 +100,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                 id="confirm-password"
                 type="password"
                 required
+                disabled={isSubmitting}
                 {...register("confirmPassword", {
                   required: "Confirmação de senha é obrigatória",
                 })}
@@ -102,7 +111,9 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
             </Field>
             <FieldGroup>
               <Field>
-                <Button type="submit">Criar conta</Button>
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? "Criando conta..." : "Criar conta"}
+                </Button>
                 <FieldDescription className="px-6 text-center">
                   Já tem uma conta? <Link href={AppRoutes.LOGIN}>Entrar</Link>
                 </FieldDescription>

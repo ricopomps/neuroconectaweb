@@ -8,35 +8,26 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/contexts/auth";
 import { AppRoutes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 import { LoginRequest } from "@/lib/validation/auth";
 import * as authApi from "@/network/api/auth";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-
-async function onSubmit(data: LoginRequest) {
-  console.log("Login data:", data);
-  console.log(data);
-  try {
-    const loginResponse = await authApi.login(data.email, data.password);
-    if (loginResponse.token) {
-      toast.success("Login realizado com sucesso!");
-    }
-  } catch (error) {
-    console.error("Login failed:", error);
-  }
-  // Handle login logic here
-}
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const { setAuth } = useAuth();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
+    formState: { isSubmitting },
     // formState: { errors, isSubmitting },
   } = useForm<LoginRequest>({
     // resolver: zodResolver(
@@ -54,6 +45,26 @@ export function LoginForm({
     //   value: paymentToEdit?.value ?? 0,
     // },
   });
+
+  async function onSubmit(data: LoginRequest) {
+    try {
+      const loginResponse = await authApi.login(data.email, data.password);
+      if (loginResponse.token && loginResponse.user) {
+        // Salvar no contexto e localStorage
+        setAuth(loginResponse.token, loginResponse.user);
+        toast.success("Login realizado com sucesso!");
+        // Redirecionar para a página inicial
+        router.push(AppRoutes.HOME);
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      if (error instanceof Error) {
+        toast.error(error.message || "Erro ao fazer login");
+      } else {
+        toast.error("Erro ao fazer login");
+      }
+    }
+  }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -97,6 +108,7 @@ export function LoginForm({
                   type="email"
                   placeholder="m@example.com"
                   required
+                  disabled={isSubmitting}
                   {...register("email", { required: "Email obrigatório" })}
                 />
               </Field>
@@ -114,11 +126,14 @@ export function LoginForm({
                   id="password"
                   type="password"
                   required
+                  disabled={isSubmitting}
                   {...register("password", { required: "Senha obrigatória" })}
                 />
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? "Entrando..." : "Login"}
+                </Button>
                 <FieldDescription className="text-center">
                   Não possui conta ainda?{" "}
                   <Link href={AppRoutes.SIGNUP}>Registre-se</Link>
