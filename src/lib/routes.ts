@@ -2,6 +2,7 @@ export enum AppRoutes {
   HOME = "/",
   LOGIN = "/login",
   SIGNUP = "/signup",
+  INSTITUTIONS_CREATE = "/institutions/create",
   INSTITUTION = "/institutions/:institutionId",
 }
 

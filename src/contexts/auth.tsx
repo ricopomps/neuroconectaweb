@@ -20,6 +20,7 @@ interface AuthContextType {
   isLoading: boolean;
   institutions: Institution[] | undefined;
   fetchInstitutions: () => Promise<void>;
+  addInstitution: (institution: Institution) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -98,6 +99,10 @@ export function AuthProvider({ children }: { readonly children: ReactNode }) {
     fetchInstitutions();
   }, [user, institutions, fetchInstitutions]);
 
+  const addInstitution = useCallback((institution: Institution) => {
+    setInstitutions((prev) => [...(prev || []), institution]);
+  }, []);
+
   const value = useMemo(
     () => ({
       token,
@@ -107,8 +112,18 @@ export function AuthProvider({ children }: { readonly children: ReactNode }) {
       isLoading,
       institutions,
       fetchInstitutions,
+      addInstitution,
     }),
-    [token, user, setAuth, logout, isLoading, institutions, fetchInstitutions],
+    [
+      token,
+      user,
+      setAuth,
+      logout,
+      isLoading,
+      institutions,
+      fetchInstitutions,
+      addInstitution,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
