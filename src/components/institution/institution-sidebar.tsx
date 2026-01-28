@@ -1,6 +1,7 @@
 import { GalleryVerticalEnd } from "lucide-react";
 import * as React from "react";
 
+import { Separator } from "@/components/ui/separator";
 import {
   Sidebar,
   SidebarContent,
@@ -16,7 +17,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { AppRoutes, buildRoute } from "@/lib/routes";
-import { Separator } from "../ui/separator";
+import Link from "next/link";
 
 interface InstitutionSidebarProps extends React.ComponentProps<typeof Sidebar> {
   readonly institutionId: string;
@@ -46,24 +47,28 @@ export function InstitutionSidebar({
         items: [
           {
             title: "Casarão",
-            url: "#",
+            url: buildRoute(AppRoutes.STUDENTS, { institutionId }),
           },
           {
             title: "Ensino Médio",
-            url: "#",
+            url: buildRoute(AppRoutes.STUDENTS, { institutionId }),
           },
         ],
       },
       {
         title: "Avaliações",
-        url: "#",
+        url: buildRoute(AppRoutes.ASSESSMENTS, { institutionId }),
         items: [
           {
             title: "PAEE",
-            url: "#",
+            url: buildRoute(AppRoutes.ASSESSMENTS, { institutionId }),
             isActive: true,
           },
         ],
+      },
+      {
+        title: "Usuários",
+        url: buildRoute(AppRoutes.INSTITUTIONS_USERS, { institutionId }),
       },
     ],
   };
@@ -74,7 +79,10 @@ export function InstitutionSidebar({
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <div>
+              <Link
+                href={buildRoute(AppRoutes.INSTITUTION, { institutionId })}
+                className="flex items-center gap-3"
+              >
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   <GalleryVerticalEnd className="size-4" />
                 </div>
@@ -87,7 +95,7 @@ export function InstitutionSidebar({
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

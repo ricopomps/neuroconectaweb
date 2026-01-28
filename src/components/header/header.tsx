@@ -1,6 +1,6 @@
+import { Separator } from "@/components/ui/separator";
 import { AppRoutes } from "@/lib/routes";
 import Link from "next/link";
-import { Separator } from "../ui/separator";
 import { UserMenu } from "./user-menu";
 
 export function Header() {

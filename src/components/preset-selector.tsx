@@ -19,7 +19,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { AppRoutes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface Preset {
   id: string;
@@ -27,7 +29,7 @@ interface Preset {
 }
 
 interface PresetSelectorProps extends PopoverProps {
-  presets: Preset[];
+  readonly presets: Preset[];
 }
 
 export function PresetSelector({ presets, ...props }: PresetSelectorProps) {
@@ -40,20 +42,22 @@ export function PresetSelector({ presets, ...props }: PresetSelectorProps) {
         <Button
           variant="outline"
           role="combobox"
-          aria-label="Load a preset..."
+          aria-label="Selecione uma instituição..."
           aria-expanded={open}
           className="flex-1 justify-between md:max-w-50 lg:max-w-75"
         >
-          {selectedPreset ? selectedPreset.name : "Load a preset..."}
+          {selectedPreset
+            ? selectedPreset.name
+            : "Selecione uma instituição..."}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-75 p-0">
         <Command>
-          <CommandInput placeholder="Search presets..." />
+          <CommandInput placeholder="Pesquisar instituições..." />
           <CommandList>
-            <CommandEmpty>No presets found.</CommandEmpty>
-            <CommandGroup heading="Examples">
+            <CommandEmpty>Nenhuma instituição encontrada.</CommandEmpty>
+            <CommandGroup heading="Instituições">
               {presets.map((preset) => (
                 <CommandItem
                   key={preset.id}
@@ -76,7 +80,12 @@ export function PresetSelector({ presets, ...props }: PresetSelectorProps) {
             </CommandGroup>
             <CommandSeparator />
             <CommandGroup>
-              <CommandItem>More examples</CommandItem>
+              <Link
+                href={AppRoutes.INSTITUTIONS_CREATE}
+                onClick={() => setOpen(false)}
+              >
+                <CommandItem>Cadastrar nova instituição</CommandItem>
+              </Link>
             </CommandGroup>
           </CommandList>
         </Command>

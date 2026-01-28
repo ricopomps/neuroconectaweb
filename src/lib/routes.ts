@@ -5,6 +5,8 @@ export enum AppRoutes {
   INSTITUTIONS_CREATE = "/institutions/create",
   INSTITUTION = "/institutions/:institutionId",
   STUDENTS = "/institutions/:institutionId/students",
+  ASSESSMENTS = "/institutions/:institutionId/assessments",
+  INSTITUTIONS_USERS = "/institutions/:institutionId/users",
 }
 
 export const buildRoute = (

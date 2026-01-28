@@ -1,9 +1,9 @@
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AppRoutes, buildRoute } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 import { Institution } from "@/models/institution";
 import { Landmark } from "lucide-react";
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 interface InstitutionCardProps extends React.ComponentProps<"div"> {
   readonly institution: Institution;

@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/auth";
 import { useMounted } from "@/hooks/use-mounted";
 import { AppRoutes } from "@/lib/routes";
@@ -7,17 +8,16 @@ import Link from "next/link";
 import { PresetActions } from "../preset-actions";
 import { PresetSave } from "../preset-save";
 import { PresetSelector } from "../preset-selector";
-import { Button } from "../ui/button";
 
 export function UserMenu() {
-  const { user } = useAuth();
+  const { user, institutions } = useAuth();
   const mounted = useMounted();
 
-  const presets = [
-    { id: "preset-1", name: "Preset 1" },
-    { id: "preset-2", name: "Preset 2" },
-    { id: "preset-3", name: "Preset 3" },
-  ];
+  const presets =
+    institutions?.map((institution) => ({
+      id: institution.id,
+      name: institution.name,
+    })) || [];
 
   if (!mounted) {
     return (
