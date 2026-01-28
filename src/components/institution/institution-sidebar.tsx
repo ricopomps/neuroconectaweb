@@ -1,4 +1,6 @@
+"use client";
 import { GalleryVerticalEnd } from "lucide-react";
+import { usePathname } from "next/navigation";
 import * as React from "react";
 
 import { Separator } from "@/components/ui/separator";
@@ -39,6 +41,10 @@ export function InstitutionSidebar({
   institutionId,
   ...props
 }: InstitutionSidebarProps) {
+  const pathname = usePathname();
+
+  const isActive = (url: string) => pathname.startsWith(url);
+
   const data: { navMain: InstitutionSidebarNavItem[] } = {
     navMain: [
       {
@@ -105,7 +111,7 @@ export function InstitutionSidebar({
           <SidebarMenu>
             {data.navMain.map((item) => (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild>
+                <SidebarMenuButton asChild isActive={isActive(item.url)}>
                   <a href={item.url} className="font-medium">
                     {item.title}
                   </a>
@@ -114,7 +120,10 @@ export function InstitutionSidebar({
                   <SidebarMenuSub>
                     {item.items.map((item) => (
                       <SidebarMenuSubItem key={item.title}>
-                        <SidebarMenuSubButton asChild isActive={item.isActive}>
+                        <SidebarMenuSubButton
+                          asChild
+                          isActive={isActive(item.url)}
+                        >
                           <a href={item.url}>{item.title}</a>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
