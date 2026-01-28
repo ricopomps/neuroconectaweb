@@ -2,9 +2,12 @@
 
 import { useAuth } from "@/contexts/auth";
 import { useMounted } from "@/hooks/use-mounted";
+import { AppRoutes } from "@/lib/routes";
+import Link from "next/link";
 import { PresetActions } from "../preset-actions";
 import { PresetSave } from "../preset-save";
 import { PresetSelector } from "../preset-selector";
+import { Button } from "../ui/button";
 
 export function UserMenu() {
   const { user } = useAuth();
@@ -28,10 +31,14 @@ export function UserMenu() {
 
   return (
     <div className="ml-auto flex w-full gap-2 sm:justify-end">
-      {user?.name && (
+      {user ? (
         <div className="flex items-center">
           <p>{user.name}</p>
         </div>
+      ) : (
+        <Link href={AppRoutes.LOGIN}>
+          <Button className="w-full">Faça o Login!</Button>
+        </Link>
       )}
       <PresetSelector presets={presets} />
       <PresetSave />

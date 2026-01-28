@@ -20,7 +20,11 @@ export function CardsList({
       {...props}
     >
       {institutions?.map((institution) => (
-        <InstitutionCard key={institution.id} institution={institution} />
+        <InstitutionCard
+          key={institution.id}
+          institution={institution}
+          className="max-w-md mx-auto"
+        />
       ))}
       <NewInstitutionCard className="max-w-md mx-auto" />
     </div>

@@ -4,6 +4,7 @@ export enum AppRoutes {
   SIGNUP = "/signup",
   INSTITUTIONS_CREATE = "/institutions/create",
   INSTITUTION = "/institutions/:institutionId",
+  STUDENTS = "/institutions/:institutionId/students",
 }
 
 export const buildRoute = (
