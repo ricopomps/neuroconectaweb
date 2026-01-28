@@ -1,6 +1,5 @@
 "use client";
 
-import { Dialog } from "@radix-ui/react-dialog";
 import { MoreHorizontal } from "lucide-react";
 import * as React from "react";
 import { toast } from "sonner";
@@ -16,6 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
+  Dialog,
   DialogClose,
   DialogContent,
   DialogDescription,

@@ -2,3 +2,5 @@
 - Na listagem de instituições, usar loading ou skeleton enquanto carrega
 - usar zod para validações
 - fazer validações de erro de form na tela com zod
+- usar swr/react query e o mutate pra gerenciar estado
+- Tratar paginação
