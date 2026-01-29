@@ -18,7 +18,7 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { DatePicker } from "../date-picket";
+import { DatePicker } from "../date-picker";
 
 interface StudentCreateModalProps {
   readonly institutionId: string;

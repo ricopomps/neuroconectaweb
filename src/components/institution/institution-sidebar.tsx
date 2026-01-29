@@ -50,16 +50,6 @@ export function InstitutionSidebar({
       {
         title: "Alunos",
         url: buildRoute(AppRoutes.STUDENTS, { institutionId }),
-        items: [
-          {
-            title: "Casarão",
-            url: buildRoute(AppRoutes.STUDENTS, { institutionId }),
-          },
-          {
-            title: "Ensino Médio",
-            url: buildRoute(AppRoutes.STUDENTS, { institutionId }),
-          },
-        ],
       },
       {
         title: "Avaliações",

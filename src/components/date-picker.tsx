@@ -16,7 +16,7 @@ import { Control, Controller, FieldPath, FieldValues } from "react-hook-form";
 interface DatePickerProps<T extends FieldValues> {
   name: FieldPath<T>;
   control: Control<T>;
-  label: string;
+  label?: string;
 
   className?: string;
   buttonClassName?: string;
@@ -46,7 +46,7 @@ export function DatePicker<T extends FieldValues>({
       control={control}
       render={({ field }) => (
         <Field className={cn("w-full", className)}>
-          <FieldLabel htmlFor={name}>{label}</FieldLabel>
+          {label && <FieldLabel htmlFor={name}>{label}</FieldLabel>}
 
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>

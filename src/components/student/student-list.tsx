@@ -15,9 +15,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { AppRoutes, buildRoute } from "@/lib/routes";
 import { formatDate } from "@/lib/utils";
 import { Student } from "@/lib/validation/student";
 import { MoreHorizontalIcon } from "lucide-react";
+import Link from "next/link";
 
 interface StudentListProps {
   readonly students: Student[];
@@ -65,7 +67,14 @@ function StudentTableRow({ student }: StudentTableRowProps) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>Editar</DropdownMenuItem>
+            <Link
+              href={buildRoute(AppRoutes.STUDENT_PAGE, {
+                institutionId: student.institutionId,
+                studentId: student.id,
+              })}
+            >
+              <DropdownMenuItem>Visualizar</DropdownMenuItem>
+            </Link>
             <DropdownMenuSeparator />
             <DropdownMenuItem variant="destructive">Deletar</DropdownMenuItem>
           </DropdownMenuContent>
