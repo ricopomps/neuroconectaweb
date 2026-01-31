@@ -4,3 +4,4 @@
 - fazer validações de erro de form na tela com zod
 - usar swr/react query e o mutate pra gerenciar estado
 - Tratar paginação
+- Tratar token expirado

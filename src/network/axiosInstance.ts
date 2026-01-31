@@ -28,6 +28,9 @@ axiosInstace.interceptors.response.use(null, (error) => {
   if (axios.isAxiosError(error)) {
     const errorMessage = error.response?.data?.error;
 
+    console.log("HTTP Error:");
+    console.log(error);
+
     switch (error.response?.status) {
       case 400:
         throw new BadRequestError(errorMessage);

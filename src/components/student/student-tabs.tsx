@@ -3,7 +3,12 @@ import { ClipboardList, FileText } from "lucide-react";
 import { AssessmentsTab } from "./assessments-tab";
 import { DocumentsTab } from "./documents-tab";
 
-export function StudentTabs() {
+interface StudentTabsProps {
+  readonly institutionId: string;
+  readonly studentId: string;
+}
+
+export function StudentTabs({ institutionId, studentId }: StudentTabsProps) {
   return (
     <Tabs defaultValue="assessments" className="w-full">
       <TabsList className="grid w-full grid-cols-2 bg-background">
@@ -22,7 +27,7 @@ export function StudentTabs() {
       </TabsContent>
 
       <TabsContent value="documents" className="space-y-4">
-        <DocumentsTab />
+        <DocumentsTab institutionId={institutionId} studentId={studentId} />
       </TabsContent>
     </Tabs>
   );

@@ -1,4 +1,4 @@
-import { Student } from "@/lib/validation/student";
+import { Student, StudentFilesPaginated } from "@/lib/validation/student";
 import api from "@/network/axiosInstance";
 
 const baseUrl = "students";
@@ -17,6 +17,20 @@ export async function create(
 export async function getAllByInstitution(institutionId: string) {
   const response = await api.get<Student[]>(
     `${baseUrl}/${institutionId}/students`,
+  );
+  return response.data;
+}
+
+export async function getById(institutionId: string, studentId: string) {
+  const response = await api.get<Student>(
+    `${baseUrl}/${institutionId}/students/${studentId}`,
+  );
+  return response.data;
+}
+
+export async function getFiles(institutionId: string, studentId: string) {
+  const response = await api.get<StudentFilesPaginated>(
+    `${baseUrl}/${institutionId}/students/${studentId}/files`,
   );
   return response.data;
 }

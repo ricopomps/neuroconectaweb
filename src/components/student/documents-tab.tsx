@@ -2,42 +2,33 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { StudentFile } from "@/lib/validation/student";
+import * as studentApi from "@/network/api/student";
 import { File, Trash2, Upload } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-interface Document {
-  id: string;
-  name: string;
-  uploadedAt: string;
-  size: string;
+interface DocumentsTabProps {
+  readonly institutionId: string;
+  readonly studentId: string;
 }
 
-// Mocked documents data
-const mockedDocuments: Document[] = [
-  {
-    id: "1",
-    name: "Histórico Escolar",
-    uploadedAt: "2024-01-10",
-    size: "2.5 MB",
-  },
-  {
-    id: "2",
-    name: "Relatório de Avaliação",
-    uploadedAt: "2024-02-15",
-    size: "1.2 MB",
-  },
-  {
-    id: "3",
-    name: "Certificado de Participação",
-    uploadedAt: "2024-03-05",
-    size: "0.8 MB",
-  },
-];
-
-export function DocumentsTab() {
-  const [documents, setDocuments] = useState<Document[]>(mockedDocuments);
+export function DocumentsTab({ institutionId, studentId }: DocumentsTabProps) {
+  const [documents, setDocuments] = useState<StudentFile[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+
+  useEffect(() => {
+    async function fetchDocuments() {
+      try {
+        const response = await studentApi.getFiles(institutionId, studentId);
+        setDocuments(response.files);
+      } catch (error) {
+        console.error("Failed to fetch documents:", error);
+        setDocuments([]);
+      }
+    }
+    fetchDocuments();
+  }, [studentId, institutionId]);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -45,18 +36,31 @@ export function DocumentsTab() {
 
     setIsUploading(true);
     try {
-      // Simulate file upload delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       const file = files[0];
-      const newDocument: Document = {
-        id: Date.now().toString(),
-        name: file.name,
-        uploadedAt: new Date().toISOString().split("T")[0],
-        size: (file.size / (1024 * 1024)).toFixed(2) + " MB",
-      };
 
-      setDocuments([newDocument, ...documents]);
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("path", `students/${studentId}/documents/${file.name}`);
+      formData.append("studentId", studentId);
+      formData.append("institutionId", institutionId);
+      const token = localStorage.getItem("authToken");
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const result = await res.json();
+      console.log(result);
+      if (result.error) {
+        toast.error(`Erro ao enviar arquivo: ${result.error}`);
+        return;
+      }
+      setDocuments([result, ...documents]);
+
       toast.success(`Arquivo "${file.name}" enviado com sucesso!`);
     } catch (e) {
       console.error("Error uploading file:", e);
@@ -76,6 +80,17 @@ export function DocumentsTab() {
       <div className="flex items-center justify-center w-full ">
         <label className="bg-background/50 flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-muted-foreground/25 rounded-lg cursor-pointer  hover:bg-muted transition-colors">
           <div className="flex flex-col items-center justify-center pt-5 pb-6">
+            {/* <button
+              onClick={() =>
+                console.log(
+                  getDownloadUrl(
+                    "https://zbvvhfsrspdrcrh8.public.blob.vercel-storage.com/students/1/documents/certificate.pdf",
+                  ),
+                )
+              }
+            >
+              hi
+            </button> */}
             <Upload className="h-8 w-8 mb-2 text-muted-foreground" />
             <p className="mb-2 text-sm text-muted-foreground">
               <span className="font-semibold">Clique para enviar</span> ou
@@ -111,8 +126,7 @@ export function DocumentsTab() {
                     <div>
                       <p className="font-semibold text-sm">{doc.name}</p>
                       <p className="text-xs text-muted-foreground">
-                        {doc.size} •{" "}
-                        {new Date(doc.uploadedAt).toLocaleDateString("pt-BR")}
+                        {new Date(doc.createdAt).toLocaleDateString("pt-BR")}
                       </p>
                     </div>
                   </div>
