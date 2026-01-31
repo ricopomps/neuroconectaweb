@@ -5,3 +5,5 @@
 - usar swr/react query e o mutate pra gerenciar estado
 - Tratar paginação
 - Tratar token expirado
+- Ao trocar entra as abas de avaliações / documentos limpar o query params de documentos (talvez colocar no próprio query params qual a aba escolhida)
+- Gerenciamento de usuário por instituição

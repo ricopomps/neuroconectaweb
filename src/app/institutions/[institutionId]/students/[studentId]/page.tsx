@@ -6,16 +6,38 @@ import * as studentsApi from "@/network/api/student";
 import { useEffect, useState } from "react";
 
 interface StudentPageProps {
-  params: { studentId: string; institutionId: string };
+  params: Promise<{ studentId: string; institutionId: string }>;
 }
 
 export default function StudentPage({ params }: StudentPageProps) {
+  const [resolvedParams, setResolvedParams] = useState<{
+    studentId: string;
+    institutionId: string;
+  } | null>(null);
+
   const [student, setStudent] = useState<Student | null>(null);
+
   useEffect(() => {
+    params
+      .then((params) => {
+        if (
+          params.studentId === resolvedParams?.studentId &&
+          params.institutionId === resolvedParams?.institutionId
+        ) {
+          return;
+        }
+        setResolvedParams(params);
+      })
+      .catch(console.error);
+  }, [params, resolvedParams]);
+
+  useEffect(() => {
+    if (!resolvedParams) return;
+
+    const { studentId, institutionId } = resolvedParams;
+
     async function fetchStudent() {
       try {
-        const { studentId, institutionId } = await params;
-
         const fetchedStudent = await studentsApi.getById(
           institutionId,
           studentId,
@@ -25,8 +47,9 @@ export default function StudentPage({ params }: StudentPageProps) {
         console.error("Failed to fetch student:", error);
       }
     }
+
     fetchStudent();
-  }, [params]);
+  }, [resolvedParams]);
 
   if (!student) {
     return (

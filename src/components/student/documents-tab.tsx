@@ -1,10 +1,12 @@
 "use client";
 
+import { Pagination } from "@/components/pagination";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { StudentFile } from "@/lib/validation/student";
 import * as studentApi from "@/network/api/student";
 import { File, Trash2, Upload } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -16,19 +18,34 @@ interface DocumentsTabProps {
 export function DocumentsTab({ institutionId, studentId }: DocumentsTabProps) {
   const [documents, setDocuments] = useState<StudentFile[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [totalItems, setTotalItems] = useState(0);
+  const searchParams = useSearchParams();
+  const itemsPerPage = 3;
+
+  const setStudentFiles = (files: StudentFile[], total: number) => {
+    setDocuments(files);
+    setTotalItems(total);
+  };
 
   useEffect(() => {
     async function fetchDocuments() {
       try {
-        const response = await studentApi.getFiles(institutionId, studentId);
-        setDocuments(response.files);
+        const page = Number(searchParams.get("page") ?? 1);
+        const skip = (page - 1) * itemsPerPage;
+        const response = await studentApi.getFiles(
+          institutionId,
+          studentId,
+          itemsPerPage,
+          skip,
+        );
+        setStudentFiles(response.files, response.count);
       } catch (error) {
         console.error("Failed to fetch documents:", error);
-        setDocuments([]);
+        setStudentFiles([], 0);
       }
     }
     fetchDocuments();
-  }, [studentId, institutionId]);
+  }, [studentId, institutionId, searchParams]);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -59,7 +76,7 @@ export function DocumentsTab({ institutionId, studentId }: DocumentsTabProps) {
         toast.error(`Erro ao enviar arquivo: ${result.error}`);
         return;
       }
-      setDocuments([result, ...documents]);
+      setStudentFiles([result, ...documents], totalItems + 1);
 
       toast.success(`Arquivo "${file.name}" enviado com sucesso!`);
     } catch (e) {
@@ -71,7 +88,10 @@ export function DocumentsTab({ institutionId, studentId }: DocumentsTabProps) {
   };
 
   const handleDelete = (id: string) => {
-    setDocuments(documents.filter((doc) => doc.id !== id));
+    setStudentFiles(
+      documents.filter((doc) => doc.id !== id),
+      totalItems - 1,
+    );
     toast.success("Documento removido com sucesso");
   };
 
@@ -80,17 +100,6 @@ export function DocumentsTab({ institutionId, studentId }: DocumentsTabProps) {
       <div className="flex items-center justify-center w-full ">
         <label className="bg-background/50 flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-muted-foreground/25 rounded-lg cursor-pointer  hover:bg-muted transition-colors">
           <div className="flex flex-col items-center justify-center pt-5 pb-6">
-            {/* <button
-              onClick={() =>
-                console.log(
-                  getDownloadUrl(
-                    "https://zbvvhfsrspdrcrh8.public.blob.vercel-storage.com/students/1/documents/certificate.pdf",
-                  ),
-                )
-              }
-            >
-              hi
-            </button> */}
             <Upload className="h-8 w-8 mb-2 text-muted-foreground" />
             <p className="mb-2 text-sm text-muted-foreground">
               <span className="font-semibold">Clique para enviar</span> ou
@@ -144,6 +153,11 @@ export function DocumentsTab({ institutionId, studentId }: DocumentsTabProps) {
           ))
         )}
       </div>
+      <Pagination
+        itemsPerPage={itemsPerPage}
+        totalItems={totalItems}
+        disableScroll
+      />
     </div>
   );
 }

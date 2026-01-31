@@ -28,9 +28,15 @@ export async function getById(institutionId: string, studentId: string) {
   return response.data;
 }
 
-export async function getFiles(institutionId: string, studentId: string) {
+export async function getFiles(
+  institutionId: string,
+  studentId: string,
+  take?: number,
+  skip?: number,
+) {
   const response = await api.get<StudentFilesPaginated>(
     `${baseUrl}/${institutionId}/students/${studentId}/files`,
+    { params: { take, skip } },
   );
   return response.data;
 }
