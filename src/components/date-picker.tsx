@@ -25,6 +25,8 @@ interface DatePickerProps<T extends FieldValues> {
   placeholder?: string;
   minDate?: Date;
   maxDate?: Date;
+
+  showMonthYearDropdown?: boolean;
 }
 
 export function DatePicker<T extends FieldValues>({
@@ -37,6 +39,7 @@ export function DatePicker<T extends FieldValues>({
   disabled,
   minDate,
   maxDate,
+  showMonthYearDropdown = false,
 }: Readonly<DatePickerProps<T>>) {
   const [open, setOpen] = React.useState(false);
 
@@ -71,6 +74,7 @@ export function DatePicker<T extends FieldValues>({
                 selected={field.value}
                 defaultMonth={field.value}
                 locale={ptBR}
+                captionLayout={showMonthYearDropdown ? "dropdown" : undefined}
                 onSelect={(date) => {
                   field.onChange(date);
                   setOpen(false);

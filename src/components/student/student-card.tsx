@@ -78,6 +78,7 @@ export function StudentCard({ student }: StudentCardProps) {
                   name="birthDate"
                   control={control}
                   maxDate={new Date()}
+                  showMonthYearDropdown
                 />
               </div>
             </div>

@@ -77,6 +77,7 @@ export function StudentCreateModal({
                 control={control}
                 label="Data de nascimento"
                 maxDate={new Date()}
+                showMonthYearDropdown
               />
             </div>
           </div>
