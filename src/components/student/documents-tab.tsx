@@ -71,7 +71,7 @@ export function DocumentsTab({ institutionId, studentId }: DocumentsTabProps) {
       });
 
       const result = await res.json();
-      console.log(result);
+
       if (result.error) {
         toast.error(`Erro ao enviar arquivo: ${result.error}`);
         return;

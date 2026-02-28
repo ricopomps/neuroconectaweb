@@ -1,10 +1,10 @@
+import { AppRoutes } from "@/lib/routes";
 import axios from "axios";
 import {
   BadRequestError,
   ConflictError,
   NotFoundError,
   TooManyRequestsError,
-  UnauthorizedError,
 } from "./http-errors";
 
 const axiosInstace = axios.create({
@@ -28,14 +28,22 @@ axiosInstace.interceptors.response.use(null, (error) => {
   if (axios.isAxiosError(error)) {
     const errorMessage = error.response?.data?.error;
 
-    console.log("HTTP Error:");
-    console.log(error);
+    if (error.response?.status === 401) {
+      if (!localStorage.getItem("authToken")) return;
+
+      if (globalThis.window !== undefined) {
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("authUser");
+      }
+
+      if (globalThis.window !== undefined) {
+        globalThis.window.location.href = AppRoutes.LOGIN;
+      }
+    }
 
     switch (error.response?.status) {
       case 400:
         throw new BadRequestError(errorMessage);
-      case 401:
-        throw new UnauthorizedError(errorMessage);
       case 404:
         throw new NotFoundError(errorMessage);
       case 409:

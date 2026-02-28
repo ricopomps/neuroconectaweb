@@ -74,7 +74,7 @@ export function Pagination({
     () => getVisiblePages(currentPage, totalPages, range),
     [currentPage, totalPages, range],
   );
-  console.log("pagination render");
+
   if (totalPages <= 1) {
     return null;
   }
