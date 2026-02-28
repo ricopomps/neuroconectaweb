@@ -166,7 +166,7 @@ export function AssessmentsTab({
         <Button
           type="button"
           variant="default"
-          onClick={() => console.log(url)}
+          onClick={() => saveAssessment}
           disabled={isSubmitting}
         >
           Salvar
