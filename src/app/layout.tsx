@@ -1,5 +1,6 @@
 import { Header } from "@/components/header/header";
 import { AuthProvider } from "@/contexts/auth";
+import { ThemeProvider } from "@/contexts/theme";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
@@ -26,15 +27,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
-          <Header />
-          <Toaster position="top-center" />
-          {children}
-        </AuthProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AuthProvider>
+            <Header />
+            <Toaster position="top-center" />
+            {children}
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

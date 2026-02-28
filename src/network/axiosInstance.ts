@@ -29,8 +29,6 @@ axiosInstace.interceptors.response.use(null, (error) => {
     const errorMessage = error.response?.data?.error;
 
     if (error.response?.status === 401) {
-      if (!localStorage.getItem("authToken")) return;
-
       if (globalThis.window !== undefined) {
         localStorage.removeItem("authToken");
         localStorage.removeItem("authUser");

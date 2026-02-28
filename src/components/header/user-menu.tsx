@@ -5,9 +5,8 @@ import { useAuth } from "@/contexts/auth";
 import { useMounted } from "@/hooks/use-mounted";
 import { AppRoutes } from "@/lib/routes";
 import Link from "next/link";
-import { PresetActions } from "../preset-actions";
-import { PresetSave } from "../preset-save";
 import { PresetSelector } from "../preset-selector";
+import { ThemeToggle } from "../theme-toggle";
 
 export function UserMenu() {
   const { user, institutions } = useAuth();
@@ -23,8 +22,7 @@ export function UserMenu() {
     return (
       <div className="ml-auto flex w-full gap-2 sm:justify-end">
         <PresetSelector presets={presets} />
-        <PresetSave />
-        <PresetActions />
+        <ThemeToggle />
       </div>
     );
   }
@@ -41,8 +39,7 @@ export function UserMenu() {
         </Link>
       )}
       <PresetSelector presets={presets} />
-      <PresetSave />
-      <PresetActions />
+      <ThemeToggle />
     </div>
   );
 }
