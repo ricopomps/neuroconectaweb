@@ -66,6 +66,62 @@ export function InstitutionForm({
                 })}
               />
             </Field>
+
+            <Field>
+              <FieldLabel htmlFor="address">Endereço</FieldLabel>
+              <Input
+                id="address"
+                type="text"
+                placeholder="Rua, número, bairro"
+                disabled={isSubmitting}
+                {...register("address")}
+              />
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="city">Cidade</FieldLabel>
+              <Input
+                id="city"
+                type="text"
+                placeholder="Cidade"
+                disabled={isSubmitting}
+                {...register("city")}
+              />
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="state">Estado</FieldLabel>
+              <Input
+                id="state"
+                type="text"
+                placeholder="Estado"
+                disabled={isSubmitting}
+                {...register("state")}
+              />
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="phone">Telefone</FieldLabel>
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="(00) 00000-0000"
+                disabled={isSubmitting}
+                {...register("phone")}
+              />
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="email">E-mail</FieldLabel>
+              <Input
+                id="email"
+                type="email"
+                placeholder="contato@instituicao.com"
+                disabled={isSubmitting}
+                {...register("email")}
+              />
+            </Field>
+
             <Field>
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? "Criando..." : "Criar Instituição"}
