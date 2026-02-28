@@ -40,3 +40,14 @@ export async function getFiles(
   );
   return response.data;
 }
+
+export async function generateAssessment(
+  studentId: string,
+  data: { name: string; birthDate: Date },
+) {
+  const response = await api.post<Student>(
+    `${baseUrl}/${studentId}/assessment`,
+    data,
+  );
+  return response.data;
+}

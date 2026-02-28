@@ -23,7 +23,7 @@ export function StudentTabs({ institutionId, studentId }: StudentTabsProps) {
       </TabsList>
 
       <TabsContent value="assessments" className="space-y-4">
-        <AssessmentsTab />
+        <AssessmentsTab institutionId={institutionId} studentId={studentId} />
       </TabsContent>
 
       <TabsContent value="documents" className="space-y-4">
