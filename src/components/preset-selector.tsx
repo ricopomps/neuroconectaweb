@@ -2,7 +2,7 @@
 
 import { PopoverProps } from "@radix-ui/react-popover";
 import { Check, ChevronsUpDown } from "lucide-react";
-import * as React from "react";
+import { useParams, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,9 +19,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { AppRoutes } from "@/lib/routes";
+import { AppRoutes, buildRoute } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 interface Preset {
   id: string;
@@ -32,9 +33,34 @@ interface PresetSelectorProps extends PopoverProps {
   readonly presets: Preset[];
 }
 
-export function PresetSelector({ presets, ...props }: PresetSelectorProps) {
-  const [open, setOpen] = React.useState(false);
-  const [selectedPreset, setSelectedPreset] = React.useState<Preset>();
+export function PresetSelector({
+  presets,
+  ...props
+}: Readonly<PresetSelectorProps>) {
+  const [open, setOpen] = useState(false);
+  const [selectedPreset, setSelectedPreset] = useState<Preset>();
+  const router = useRouter();
+  const params = useParams();
+
+  useEffect(() => {
+    const institutionId = (params as { institutionId?: string })?.institutionId;
+    if (!institutionId) return;
+
+    const found = presets.find((p) => p.id === institutionId);
+    if (found) {
+      Promise.resolve().then(() => setSelectedPreset(found));
+    }
+  }, [presets, params]);
+
+  function handleSelectPreset(preset: Preset) {
+    setSelectedPreset(preset);
+    setOpen(false);
+    router.push(
+      buildRoute(AppRoutes.INSTITUTION, {
+        institutionId: preset.id,
+      }),
+    );
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen} {...props}>
@@ -61,10 +87,7 @@ export function PresetSelector({ presets, ...props }: PresetSelectorProps) {
               {presets.map((preset) => (
                 <CommandItem
                   key={preset.id}
-                  onSelect={() => {
-                    setSelectedPreset(preset);
-                    setOpen(false);
-                  }}
+                  onSelect={() => handleSelectPreset(preset)}
                 >
                   {preset.name}
                   <Check
