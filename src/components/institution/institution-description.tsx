@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/contexts/auth";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,22 @@ import { Edit2 } from "lucide-react";
 
 interface InstitutionDescriptionProps {
   readonly institutionId: string;
+}
+
+function formatPhone(value: string) {
+  const digits = value.replaceAll(/\D/g, "").slice(0, 11);
+  const d1 = digits.slice(0, 2);
+  const d2 = digits.slice(2, 7);
+  const d3 = digits.slice(7, 11);
+
+  let formatted = "";
+  if (d1) {
+    formatted += `(${d1}`;
+    if (d1.length === 2) formatted += ") ";
+  }
+  if (d2) formatted += d2;
+  if (d3) formatted += `-${d3}`;
+  return formatted;
 }
 
 // mocked default data used when demonstrating the form
@@ -40,6 +56,7 @@ export function InstitutionDescription({
     register,
     handleSubmit,
     reset,
+    control,
     formState: { isSubmitting },
   } = useForm<Institution>({
     defaultValues: mockInstitution,
@@ -132,7 +149,19 @@ export function InstitutionDescription({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="phone">Telefone</Label>
-                  <Input id="phone" {...register("phone")} />
+                  <Controller
+                    control={control}
+                    name="phone"
+                    render={({ field }) => (
+                      <Input
+                        id="phone"
+                        value={field.value ?? ""}
+                        onChange={(event) =>
+                          field.onChange(formatPhone(event.target.value))
+                        }
+                      />
+                    )}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email">E-mail</Label>
