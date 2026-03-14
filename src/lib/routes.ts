@@ -8,6 +8,7 @@ export enum AppRoutes {
   ASSESSMENTS = "/institutions/:institutionId/assessments",
   INSTITUTIONS_USERS = "/institutions/:institutionId/users",
   STUDENT_PAGE = "/institutions/:institutionId/students/:studentId",
+  AUDIT_REPORT = "/institutions/:institutionId/audit-report",
 }
 
 export const buildRoute = (

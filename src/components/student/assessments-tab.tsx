@@ -1,11 +1,24 @@
 "use client";
 
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { AssessmentWithUrl, DocumentsTabProps } from "@/lib/validation/assessments";
+import {
+  AssessmentWithUrl,
+  DocumentsTabProps,
+} from "@/lib/validation/assessments";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldGroup } from "@/components/ui/field";
 import * as studentApi from "@/network/api/student";
@@ -23,8 +36,12 @@ export function AssessmentsTab({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [generatedDoc, setGeneratedDoc] = useState("");
-  const [assessmentsDone, setAssessmentsDone] = useState<AssessmentWithUrl[]>([]);
+  const [assessmentsDone, setAssessmentsDone] = useState<AssessmentWithUrl[]>(
+    [],
+  );
   const [selectedAssessmentId, setSelectedAssessmentId] = useState<string>("");
+  const [nameForAssessment, setNameForAssessment] = useState<string>("");
+  const [open, setOpen] = useState(false);
 
   const [url, setUrl] = useState("");
 
@@ -32,13 +49,17 @@ export function AssessmentsTab({
     setDocuments(files);
   };
 
+  const getAssessments = async () => {
+    const assessments = await assessmentApi.getAssessments(studentId);
+    setAssessmentsDone(assessments);
+  };
+
   useEffect(() => {
     async function fetchDocuments() {
       try {
         const response = await studentApi.getFiles(institutionId, studentId);
         setStudentFiles(response.files);
-        const assessments = await assessmentApi.getAssessments(studentId);
-        setAssessmentsDone(assessments);
+        await getAssessments();
       } catch (error) {
         console.error("Failed to fetch documents:", error);
         setStudentFiles([]);
@@ -48,7 +69,7 @@ export function AssessmentsTab({
   }, [studentId, institutionId]);
 
   const sendFilesToAI = () => {
-    // setIsSubmitting(true);
+    setIsSubmitting(true);
     assessmentApi
       .generateDoc(documents)
       .then((response) => {
@@ -58,12 +79,38 @@ export function AssessmentsTab({
         toast.error("Erro ao gerar documento");
       })
       .finally(() => {
-        // setIsSubmitting(false);
+        setIsSubmitting(false);
+        getAssessments();
       });
   };
 
-  const saveAssessment = () => {
-    // setIsSubmitting(true);
+  const dataSaved = () => {
+    setGeneratedDoc("");
+    setOpenForm(false);
+    setOpen(false);
+    setIsSubmitting(false);
+    getAssessments();
+  };
+
+  const saveNewAssessment = () => {
+    assessmentApi
+      .createAssessment(nameForAssessment, generatedDoc, studentId)
+      .then((response) => {
+        setUrl(response);
+        toast.success("Avaliação salva!", {
+          description: `Registrada como ${nameForAssessment}`,
+        });
+      })
+      .catch(() => {
+        toast.error("Erro ao salvar avaliação");
+      })
+      .finally(() => {
+        dataSaved();
+      });
+  };
+
+  const updateAssessment = () => {
+    setIsSubmitting(true);
     if (selectedAssessmentId) {
       assessmentApi
         .updateAssessment(generatedDoc, selectedAssessmentId)
@@ -75,32 +122,21 @@ export function AssessmentsTab({
           toast.error("Erro ao atualizar avaliação");
         })
         .finally(() => {
-          setIsSubmitting(false);
-        });
-    } else {
-      const assessmentName = `Avaliação ${assessmentsDone.length + 1}`;
-      assessmentApi
-        .createAssessment(assessmentName, generatedDoc, studentId)
-        .then((response) => {
-          setUrl(response);
-          toast.success("Avaliação salva!", {
-            description: `Registrada como ${assessmentName}`,
-          });
-        })
-        .catch(() => {
-          toast.error("Erro ao salvar avaliação");
-        })
-        .finally(() => {
-          setIsSubmitting(false);
+          dataSaved();
         });
     }
   };
 
   const editAssessment = (assessment: AssessmentWithUrl) => {
     setGeneratedDoc(assessment.content);
-    setUrl(assessment.url)
+    setUrl(assessment.url);
     setSelectedAssessmentId(assessment.id);
     setOpenForm(true);
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.persist();
+    setNameForAssessment(event.target.value);
   };
 
   if (!openForm) {
@@ -157,6 +193,16 @@ export function AssessmentsTab({
         </Button>
         <Button
           type="button"
+          variant="default"
+          onClick={() =>
+            selectedAssessmentId ? updateAssessment() : setOpen(true)
+          }
+          disabled={isSubmitting}
+        >
+          Editar
+        </Button>
+        <Button
+          type="button"
           variant="secondary"
           onClick={() => window.open(url)}
           disabled={isSubmitting}
@@ -166,12 +212,41 @@ export function AssessmentsTab({
         <Button
           type="button"
           variant="default"
-          onClick={() => saveAssessment}
+          onClick={() =>
+            selectedAssessmentId ? updateAssessment() : setOpen(true)
+          }
           disabled={isSubmitting}
         >
           Salvar
         </Button>
       </CardContent>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Criar Avaliação</DialogTitle>
+            <DialogDescription>
+              Defina um nome para a avaliação a ser salva
+            </DialogDescription>
+          </DialogHeader>
+          <FieldGroup>
+            <Field>
+              <Label htmlFor="name-1">Nome</Label>
+              <Input
+                id="name-1"
+                name="name"
+                value={nameForAssessment}
+                onChange={handleChange}
+              />
+            </Field>
+          </FieldGroup>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Cancelar</Button>
+            </DialogClose>
+            <Button onClick={() => saveNewAssessment()}>Salvar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   ) : (
     <div className="space-y-4">
