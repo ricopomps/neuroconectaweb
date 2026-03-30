@@ -2,6 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { StudentTabProps } from "@/lib/validation/assessments";
 import { StudentCaseStudy } from "@/lib/validation/student";
 import * as caseStudyApi from "@/network/api/case-study";
 import { useEffect, useState } from "react";
@@ -15,7 +21,6 @@ import { CaseStudyStepIdentification } from "./case-study-step-identification";
 import { CaseStudyStepInterests } from "./case-study-step-interests";
 import { CaseStudyStepPedagogical } from "./case-study-step-pedagogical";
 import { CaseStudyStepSynthesis } from "./case-study-step-synthesis";
-import { StudentTabProps } from "@/lib/validation/assessments";
 
 const steps = [
   { title: "Identificação", component: CaseStudyStepIdentification },
@@ -65,7 +70,7 @@ export function StudentCaseStudyForm({
       }
     }
     fetchCaseStudy();
-  }, [institutionId, studentId, reset]);
+  }, [institutionId, studentId, reset, setCaseStudy]);
 
   const onSubmit = async (data: StudentCaseStudy) => {
     try {
@@ -102,7 +107,13 @@ export function StudentCaseStudyForm({
     }
   };
 
-  const progress = ((currentStep + 1) / steps.length) * 100;
+  const getButtonClass = (index: number) => {
+    const base =
+      "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors";
+    if (index === currentStep) return `${base} bg-green-600 text-white`;
+    if (index < currentStep) return `${base} bg-blue-600 text-white`;
+    return `${base} bg-gray-200 text-gray-700 hover:bg-gray-300`;
+  };
 
   const CurrentStepComponent = steps[currentStep].component;
 
@@ -110,11 +121,30 @@ export function StudentCaseStudyForm({
     <Card className="w-full">
       <CardHeader>
         <CardTitle>{steps[currentStep].title}</CardTitle>
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div
-            className="bg-blue-600 h-2 rounded-full"
-            style={{ width: `${progress}%` }}
-          ></div>
+        <div className="flex items-center justify-between w-full">
+          {steps.map((step, index) => (
+            <div key={step.title} className="flex items-center w-full">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    onClick={() => setCurrentStep(index)}
+                    className={getButtonClass(index)}
+                  >
+                    {index + 1}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>{step.title}</TooltipContent>
+              </Tooltip>
+              {index < steps.length - 1 && (
+                <div
+                  className={`flex-1 h-1 ${
+                    index < currentStep ? "bg-blue-600" : "bg-gray-200"
+                  }`}
+                ></div>
+              )}
+            </div>
+          ))}
         </div>
       </CardHeader>
       <CardContent>

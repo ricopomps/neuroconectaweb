@@ -1,5 +1,8 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogClose,
@@ -9,24 +12,21 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { PlusIcon } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import {
   AssessmentWithUrl,
   StudentTabProps,
 } from "@/lib/validation/assessments";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Field, FieldGroup } from "@/components/ui/field";
-import * as studentApi from "@/network/api/student";
-import * as assessmentApi from "@/network/api/assessment";
 import { StudentFile } from "@/lib/validation/student";
-import { toast } from "sonner";
-import { useEditor, EditorContent } from "@tiptap/react";
+import * as assessmentApi from "@/network/api/assessment";
+import * as studentApi from "@/network/api/student";
+import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { PlusIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export function AssessmentsTab({
   institutionId,
@@ -136,7 +136,7 @@ export function AssessmentsTab({
     }
     const unchangedDoc = isUnchangedHtml();
     if (unchangedDoc) {
-      toast.warning('Não foram feitas mudanças no documento')
+      toast.warning("Não foram feitas mudanças no documento");
       return;
     }
     setIsSubmitting(true);
@@ -301,7 +301,7 @@ export function AssessmentsTab({
               <Label htmlFor="stdt-case">Estudo de Caso</Label>
             </Field>
             {documents.map((doc) => (
-              <Field key={doc.name} orientation="horizontal">
+              <Field key={doc.id} orientation="horizontal">
                 <Checkbox id="terms-checkbox" name="terms-checkbox" />
                 <Label htmlFor="terms-checkbox">{doc.name}</Label>
               </Field>

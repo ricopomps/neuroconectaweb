@@ -34,19 +34,6 @@ export function CaseStudyStepIdentification({
 }: CaseStudyStepIdentificationProps) {
   return (
     <div className="space-y-6">
-      <div className="space-y-2">
-        <Label htmlFor="developmentStage">Fase de desenvolvimento</Label>
-        <select
-          id="developmentStage"
-          {...register("developmentStage")}
-          className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          <option value="">Selecione</option>
-          <option value="pre_operational">Pré-operatório</option>
-          <option value="concrete_operational">Operatório-concreto</option>
-          <option value="formal_operational">Operatório-formal</option>
-        </select>
-      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="schoolClass">Turma/Ano</Label>
