@@ -4,8 +4,8 @@ import api from "@/network/axiosInstance";
 
 const baseUrl = "assessment";
 
-export async function generateDoc(files: StudentFile[]) {
-  const response = await api.post<{ response: string }>(`${baseUrl}/generate`, {
+export async function generateDoc(studentId: string, files: StudentFile[]) {
+  const response = await api.post<{ response: string }>(`${baseUrl}/generate/${studentId}`, {
     files,
   });
   return response.data.response;

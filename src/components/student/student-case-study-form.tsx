@@ -15,11 +15,7 @@ import { CaseStudyStepIdentification } from "./case-study-step-identification";
 import { CaseStudyStepInterests } from "./case-study-step-interests";
 import { CaseStudyStepPedagogical } from "./case-study-step-pedagogical";
 import { CaseStudyStepSynthesis } from "./case-study-step-synthesis";
-
-interface StudentCaseStudyFormProps {
-  readonly institutionId: string;
-  readonly studentId: string;
-}
+import { StudentTabProps } from "@/lib/validation/assessments";
 
 const steps = [
   { title: "Identificação", component: CaseStudyStepIdentification },
@@ -35,9 +31,10 @@ const steps = [
 export function StudentCaseStudyForm({
   institutionId,
   studentId,
-}: StudentCaseStudyFormProps) {
+  caseStudy,
+  setCaseStudy,
+}: StudentTabProps) {
   const [currentStep, setCurrentStep] = useState(0);
-  const [caseStudy, setCaseStudy] = useState<StudentCaseStudy | null>(null);
 
   const {
     register,

@@ -3,6 +3,7 @@
 import { Pagination } from "@/components/pagination";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { StudentTabProps } from "@/lib/validation/assessments";
 import { StudentFile } from "@/lib/validation/student";
 import * as studentApi from "@/network/api/student";
 import { File, Trash2, Upload } from "lucide-react";
@@ -10,12 +11,8 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-interface DocumentsTabProps {
-  readonly institutionId: string;
-  readonly studentId: string;
-}
 
-export function DocumentsTab({ institutionId, studentId }: DocumentsTabProps) {
+export function DocumentsTab({ institutionId, studentId }: StudentTabProps) {
   const [documents, setDocuments] = useState<StudentFile[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [totalItems, setTotalItems] = useState(0);

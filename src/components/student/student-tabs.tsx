@@ -3,13 +3,9 @@ import { BookOpen, ClipboardList, FileText } from "lucide-react";
 import { AssessmentsTab } from "./assessments-tab";
 import { DocumentsTab } from "./documents-tab";
 import { StudentCaseStudyForm } from "./student-case-study-form";
+import { StudentTabProps } from "@/lib/validation/assessments";
 
-interface StudentTabsProps {
-  readonly institutionId: string;
-  readonly studentId: string;
-}
-
-export function StudentTabs({ institutionId, studentId }: StudentTabsProps) {
+export function StudentTabs({ institutionId, studentId, caseStudy, setCaseStudy }: StudentTabProps) {
   return (
     <Tabs defaultValue="assessments" className="w-full">
       <TabsList className="grid w-full grid-cols-3 bg-background">
@@ -28,17 +24,19 @@ export function StudentTabs({ institutionId, studentId }: StudentTabsProps) {
       </TabsList>
 
       <TabsContent value="assessments" className="space-y-4">
-        <AssessmentsTab institutionId={institutionId} studentId={studentId} />
+        <AssessmentsTab institutionId={institutionId} studentId={studentId} caseStudy={caseStudy} setCaseStudy={setCaseStudy} />
       </TabsContent>
 
       <TabsContent value="documents" className="space-y-4">
-        <DocumentsTab institutionId={institutionId} studentId={studentId} />
+        <DocumentsTab institutionId={institutionId} studentId={studentId} caseStudy={caseStudy} setCaseStudy={setCaseStudy} />
       </TabsContent>
 
       <TabsContent value="case-study" className="space-y-4">
         <StudentCaseStudyForm
           institutionId={institutionId}
           studentId={studentId}
+          caseStudy={caseStudy}
+          setCaseStudy={setCaseStudy}
         />
       </TabsContent>
     </Tabs>

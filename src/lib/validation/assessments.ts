@@ -1,3 +1,6 @@
+import { Dispatch, SetStateAction } from "react";
+import { StudentCaseStudy } from "./student";
+
 export interface Assessment {
   id: string;
   name: string;
@@ -15,7 +18,9 @@ export interface AssessmentCardProps {
   readonly assesment: Assessment;
 }
 
-export interface DocumentsTabProps {
+export interface StudentTabProps {
   readonly institutionId: string;
   readonly studentId: string;
+  readonly caseStudy: StudentCaseStudy | null;
+  readonly setCaseStudy: Dispatch<SetStateAction<StudentCaseStudy | null>>;
 }

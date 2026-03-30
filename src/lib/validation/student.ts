@@ -6,6 +6,10 @@ export interface Student {
   createdAt: string;
 }
 
+export interface StudentWithCases extends Student {
+  caseStudies?: StudentCaseStudy[];
+}
+
 export interface StudentFile {
   id: string;
   studentId: string;

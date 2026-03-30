@@ -1,4 +1,4 @@
-import { Student, StudentFilesPaginated } from "@/lib/validation/student";
+import { Student, StudentFilesPaginated, StudentWithCases } from "@/lib/validation/student";
 import api from "@/network/axiosInstance";
 
 const baseUrl = "students";
@@ -22,7 +22,7 @@ export async function getAllByInstitution(institutionId: string) {
 }
 
 export async function getById(institutionId: string, studentId: string) {
-  const response = await api.get<Student>(
+  const response = await api.get<StudentWithCases>(
     `${baseUrl}/${institutionId}/students/${studentId}`,
   );
   return response.data;
