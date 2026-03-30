@@ -20,18 +20,16 @@ export function CaseStudyStepHealth({
     <div className="space-y-6">
       <div className="space-y-2">
         <Label htmlFor="pregnancyHistory">Histórico gestacional</Label>
-        <Textarea id="pregnancyHistory" {...register("pregnancyHistory")} />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="developmentMilestones">Desenvolvimento</Label>
-        <Textarea
-          id="developmentMilestones"
-          {...register("developmentMilestones")}
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="healthHistory">Saúde geral</Label>
-        <Textarea id="healthHistory" {...register("healthHistory")} />
+        <select
+          id="pregnancyHistory"
+          {...register("pregnancyHistory")}
+          className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm"
+        >
+          <option value="">Selecione</option>
+          <option value="normal">Normal</option>
+          <option value="complicated">Complicado</option>
+          <option value="premature">Prematuro</option>
+        </select>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="space-y-2">
@@ -42,9 +40,9 @@ export function CaseStudyStepHealth({
             className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm"
           >
             <option value="">Selecione</option>
-            <option value="normal">Normal</option>
-            <option value="delayed">Atrasado</option>
-            <option value="not_walking">Não anda</option>
+            <option value="até_1_ano">Até 1 ano</option>
+            <option value="entre_1_2">Entre 1 e 2 anos</option>
+            <option value="acima_2">Acima de 2 anos</option>
           </select>
         </div>
         <div className="space-y-2">
@@ -55,9 +53,9 @@ export function CaseStudyStepHealth({
             className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm"
           >
             <option value="">Selecione</option>
-            <option value="normal">Normal</option>
-            <option value="delayed">Atrasado</option>
-            <option value="not_speaking">Não fala</option>
+            <option value="até_1_ano">Até 1 ano</option>
+            <option value="entre_1_2">Entre 1 e 2 anos</option>
+            <option value="acima_2">Acima de 2 anos</option>
           </select>
         </div>
         <div className="space-y-2">
@@ -148,6 +146,17 @@ export function CaseStudyStepHealth({
           />
           <Label htmlFor="medicationAtSchool">Medicação na escola</Label>
         </div>
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="developmentMilestones">Desenvolvimento</Label>
+        <Textarea
+          id="developmentMilestones"
+          {...register("developmentMilestones")}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="healthHistory">Saúde geral</Label>
+        <Textarea id="healthHistory" {...register("healthHistory")} />
       </div>
     </div>
   );

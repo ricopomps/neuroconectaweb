@@ -29,12 +29,17 @@ export interface StudentCaseStudy {
 
   // IDENTIFICAÇÃO
   schoolClass?: string;
-  responsibleName?: string;
+  responsibleName?: "médico" | "pai_responsável" | "professor" | "outro";
   responsiblePhone?: string;
   responsibleEmail?: string;
   referredBy?: "teacher" | "family" | "technical_team";
   hasDiagnosis?: boolean;
   diagnosis?: string;
+  comorbidities?: string[];
+  developmentStage?:
+    | "pre_operational"
+    | "concrete_operational"
+    | "formal_operational";
 
   // RESPONSÁVEL PELAS INFORMAÇÕES
   informantName?: string;
@@ -90,6 +95,7 @@ export interface StudentCaseStudy {
 
   // COMPORTAMENTO
   crisisRegulationStrategy?: string;
+  crisisBehaviors?: string[];
 
   // AVALIAÇÃO PEDAGÓGICA
   attention?: "focused" | "dispersed" | "hyperfocus";
@@ -116,6 +122,7 @@ export interface StudentCaseStudy {
   strengths?: string;
   difficulties?: string;
   currentSupports?: string;
+  autismCharacteristics?: string[];
 
   // SÍNTESE FINAL
   aeeOpinion?: string;

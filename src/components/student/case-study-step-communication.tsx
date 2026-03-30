@@ -16,9 +16,7 @@ export function CaseStudyStepCommunication({
 }: CaseStudyStepCommunicationProps) {
   const COMMUNICATION_TYPES = [
     { value: "verbal", label: "Verbal" },
-    { value: "gestural", label: "Gestual" },
-    { value: "pictorial", label: "Pictórica" },
-    { value: "alternative", label: "Alternativa" },
+    { value: "non_verbal", label: "Não Verbal" },
   ];
 
   return (

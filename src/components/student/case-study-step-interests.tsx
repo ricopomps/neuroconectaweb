@@ -3,7 +3,6 @@
 import { CheckboxGroup } from "@/components/form/CheckboxGroup";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { StudentCaseStudy } from "@/lib/validation/student";
 import { Control, UseFormRegister } from "react-hook-form";
 
@@ -21,6 +20,8 @@ export function CaseStudyStepInterests({
     { value: "art", label: "Artes" },
     { value: "sports", label: "Esportes" },
     { value: "technology", label: "Tecnologia" },
+    { value: "animals", label: "Animais" },
+    { value: "others", label: "Outros" },
   ];
 
   const SENSORY_SENSITIVITIES = [
@@ -55,10 +56,17 @@ export function CaseStudyStepInterests({
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="crisisRegulationStrategy">Comportamento em crise</Label>
-        <Textarea
-          id="crisisRegulationStrategy"
-          {...register("crisisRegulationStrategy")}
+        <Label>Comportamento de crise</Label>
+        <CheckboxGroup
+          control={control}
+          name="crisisBehaviors"
+          options={[
+            { value: "crying", label: "Chorar" },
+            { value: "isolation", label: "Se isolar" },
+            { value: "aggression", label: "Agressão" },
+            { value: "other", label: "Outros" },
+          ]}
+          className="grid grid-cols-2 gap-2"
         />
       </div>
     </div>
