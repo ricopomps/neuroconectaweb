@@ -37,7 +37,7 @@ export function CaseStudyStepPedagogical({
           >
             <option value="">Selecione</option>
             <option value="asks_help">Pede ajuda</option>
-            <option value="gestural_request">Pedido gestual</option>
+            <option value="withdraws">Se recolher</option>
             <option value="meltdown">Colapso</option>
           </select>
         </div>
@@ -56,7 +56,7 @@ export function CaseStudyStepPedagogical({
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <Label htmlFor="classificationSkill">Classificação</Label>
           <select
             id="classificationSkill"
@@ -64,9 +64,9 @@ export function CaseStudyStepPedagogical({
             className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm"
           >
             <option value="">Selecione</option>
-            <option value="correct">Correta</option>
-            <option value="mixed">Mista</option>
-            <option value="no_criteria">Sem critério</option>
+            <option value="developing">Em desenvolvimento</option>
+            <option value="acquired">Adquirida</option>
+            <option value="not_applicable">Não se aplica</option>
           </select>
         </div>
         <div className="space-y-2">
@@ -77,10 +77,11 @@ export function CaseStudyStepPedagogical({
             className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm"
           >
             <option value="">Selecione</option>
-            <option value="correct">Correta</option>
-            <option value="not_understood">Não compreendida</option>
+            <option value="developing">Em desenvolvimento</option>
+            <option value="acquired">Adquirida</option>
+            <option value="not_applicable">Não se aplica</option>
           </select>
-        </div>
+        </div> */}
         <div className="space-y-2">
           <Label htmlFor="spatialConcepts">Noção espacial</Label>
           <select
@@ -89,8 +90,9 @@ export function CaseStudyStepPedagogical({
             className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm"
           >
             <option value="">Selecione</option>
-            <option value="understands">Compreende</option>
-            <option value="confused">Confundido</option>
+            <option value="developing">Em desenvolvimento</option>
+            <option value="acquired">Adquirida</option>
+            <option value="difficulties">Com dificuldades</option>
           </select>
         </div>
       </div>
@@ -103,10 +105,9 @@ export function CaseStudyStepPedagogical({
             className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm"
           >
             <option value="">Selecione</option>
-            <option value="pre_syllabic">Pré-silábico</option>
             <option value="syllabic">Silábico</option>
+            <option value="syllabic_alphabetic">Silábico-alfabético</option>
             <option value="alphabetic">Alfabético</option>
-            <option value="fluent">Fluente</option>
           </select>
         </div>
         <div className="space-y-2">
@@ -135,6 +136,7 @@ export function CaseStudyStepPedagogical({
             <option value="visual">Visual</option>
             <option value="auditory">Auditivo</option>
             <option value="kinesthetic">Cinestésico</option>
+            <option value="text_reading">Leitura de texto</option>
           </select>
         </div>
       </div>

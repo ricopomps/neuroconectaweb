@@ -1,6 +1,6 @@
 "use client";
 import { StudentCaseStudyForm } from "@/components/student/student-case-study-form";
-import { Student } from "@/lib/validation/student";
+import { Student, StudentCaseStudy } from "@/lib/validation/student";
 import * as studentsApi from "@/network/api/student";
 import { useEffect, useState } from "react";
 
@@ -17,6 +17,7 @@ export default function CaseStudyPage({
   } | null>(null);
 
   const [student, setStudent] = useState<Student | null>(null);
+  const [caseStudy, setCaseStudy] = useState<StudentCaseStudy | null>(null);
 
   useEffect(() => {
     params
@@ -67,6 +68,8 @@ export default function CaseStudyPage({
         <StudentCaseStudyForm
           institutionId={student.institutionId}
           studentId={student.id}
+          caseStudy={caseStudy}
+          setCaseStudy={setCaseStudy}
         />
       </div>
     </div>

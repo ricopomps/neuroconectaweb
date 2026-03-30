@@ -29,7 +29,7 @@ export function CaseStudyStepSynthesis({
         <Textarea id="aeeOpinion" {...register("aeeOpinion")} />
       </div>
       <div className="space-y-2">
-        <Label>Áreas prioritárias</Label>
+        <Label>Foco de atuação do PAEE</Label>
         <CheckboxGroup
           control={control}
           name="priorityAreas"

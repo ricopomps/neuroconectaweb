@@ -1,5 +1,6 @@
 "use client";
 
+import { CheckboxGroup } from "@/components/form/CheckboxGroup";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -33,6 +34,19 @@ export function CaseStudyStepIdentification({
 }: CaseStudyStepIdentificationProps) {
   return (
     <div className="space-y-6">
+      <div className="space-y-2">
+        <Label htmlFor="developmentStage">Fase de desenvolvimento</Label>
+        <select
+          id="developmentStage"
+          {...register("developmentStage")}
+          className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <option value="">Selecione</option>
+          <option value="pre_operational">Pré-operatório</option>
+          <option value="concrete_operational">Operatório-concreto</option>
+          <option value="formal_operational">Operatório-formal</option>
+        </select>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="schoolClass">Turma/Ano</Label>
@@ -41,8 +55,18 @@ export function CaseStudyStepIdentification({
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="responsibleName">Responsável</Label>
-          <Input id="responsibleName" {...register("responsibleName")} />
+          <Label htmlFor="responsibleName">Tipo de responsável</Label>
+          <select
+            id="responsibleName"
+            {...register("responsibleName")}
+            className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <option value="">Selecione</option>
+            <option value="médico">Médico</option>
+            <option value="pai_responsável">Pai ou responsável</option>
+            <option value="professor">Professor</option>
+            <option value="outro">Outro</option>
+          </select>
         </div>
         <div className="space-y-2">
           <Label htmlFor="responsiblePhone">Telefone</Label>
@@ -102,6 +126,21 @@ export function CaseStudyStepIdentification({
         <Label htmlFor="diagnosis">Diagnóstico</Label>
         <Input id="diagnosis" {...register("diagnosis")} />
       </div>
+      <div className="space-y-2">
+        <Label>Comorbidades</Label>
+        <CheckboxGroup
+          control={control}
+          name="comorbidities"
+          options={[
+            { value: "tea", label: "TEA" },
+            { value: "tod", label: "TOD" },
+            { value: "tdah", label: "TDAH" },
+            { value: "dislalia", label: "Dislalia" },
+            { value: "other", label: "Outros" },
+          ]}
+          className="grid grid-cols-2 gap-2"
+        />
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="informantName">Responsável pelas informações</Label>
@@ -109,7 +148,17 @@ export function CaseStudyStepIdentification({
         </div>
         <div className="space-y-2">
           <Label htmlFor="informantRelation">Relação</Label>
-          <Input id="informantRelation" {...register("informantRelation")} />
+          <select
+            id="informantRelation"
+            {...register("informantRelation")}
+            className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <option value="">Selecione</option>
+            <option value="médico">Médico</option>
+            <option value="pai_responsável">Pai ou responsável</option>
+            <option value="professor">Professor</option>
+            <option value="outro">Outro</option>
+          </select>
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
