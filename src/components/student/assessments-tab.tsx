@@ -24,27 +24,33 @@ import { Field, FieldGroup } from "@/components/ui/field";
 import * as studentApi from "@/network/api/student";
 import * as assessmentApi from "@/network/api/assessment";
 import { StudentFile } from "@/lib/validation/student";
-import Markdown from "react-markdown";
 import { toast } from "sonner";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 
 export function AssessmentsTab({
   institutionId,
   studentId,
   caseStudy,
 }: StudentTabProps) {
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: "",
+    immediatelyRender: false,
+  });
+
   const [openForm, setOpenForm] = useState(false);
   const [documents, setDocuments] = useState<StudentFile[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  const [generatedDoc, setGeneratedDoc] = useState("");
+  const [generatedDoc, setGeneratedDoc] = useState<string>("");
   const [assessmentsDone, setAssessmentsDone] = useState<AssessmentWithUrl[]>(
     [],
   );
   const [selectedAssessmentId, setSelectedAssessmentId] = useState<string>("");
   const [nameForAssessment, setNameForAssessment] = useState<string>("");
-  const [open, setOpen] = useState(false);
-
-  const [url, setUrl] = useState("");
+  const [open, setOpen] = useState<boolean>(false);
+  const [url, setUrl] = useState<string>("");
 
   const setStudentFiles = (files: StudentFile[]) => {
     setDocuments(files);
@@ -86,6 +92,7 @@ export function AssessmentsTab({
     assessmentApi
       .generateDoc(studentId, documents)
       .then((response) => {
+        setEditableContent(response);
         setGeneratedDoc(response);
       })
       .catch(() => {
@@ -123,24 +130,33 @@ export function AssessmentsTab({
   };
 
   const updateAssessment = () => {
-    setIsSubmitting(true);
-    if (selectedAssessmentId) {
-      assessmentApi
-        .updateAssessment(generatedDoc, selectedAssessmentId)
-        .then((response) => {
-          setUrl(response);
-          toast.success("Avaliação atualizada!");
-        })
-        .catch(() => {
-          toast.error("Erro ao atualizar avaliação");
-        })
-        .finally(() => {
-          dataSaved();
-        });
+    if (!editor) {
+      toast.error("Erro ao processar alteração");
+      return;
     }
+    const unchangedDoc = isUnchangedHtml();
+    if (unchangedDoc) {
+      toast.warning('Não foram feitas mudanças no documento')
+      return;
+    }
+    setIsSubmitting(true);
+    const content = editor.getHTML();
+    assessmentApi
+      .updateAssessment(content, selectedAssessmentId)
+      .then((response) => {
+        setUrl(response);
+        toast.success("Avaliação atualizada!");
+      })
+      .catch(() => {
+        toast.error("Erro ao atualizar avaliação");
+      })
+      .finally(() => {
+        dataSaved();
+      });
   };
 
   const editAssessment = (assessment: AssessmentWithUrl) => {
+    setEditableContent(assessment.content);
     setGeneratedDoc(assessment.content);
     setUrl(assessment.url);
     setSelectedAssessmentId(assessment.id);
@@ -150,6 +166,20 @@ export function AssessmentsTab({
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.persist();
     setNameForAssessment(event.target.value);
+  };
+
+  const setEditableContent = (content: string) => {
+    if (editor) {
+      editor.commands.setContent(content);
+    }
+  };
+
+  const isUnchangedHtml = () => {
+    if (!editor) {
+      return false;
+    }
+    const content = editor.getHTML();
+    return content === generatedDoc;
   };
 
   if (!openForm) {
@@ -190,7 +220,7 @@ export function AssessmentsTab({
       <CardContent>
         <Card>
           <CardContent>
-            <Markdown>{generatedDoc}</Markdown>
+            <EditorContent editor={editor} />
           </CardContent>
         </Card>
         <div className="flex items-center justify-between pt-4">
@@ -205,16 +235,6 @@ export function AssessmentsTab({
               disabled={isSubmitting}
             >
               Voltar
-            </Button>
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() =>
-                selectedAssessmentId ? updateAssessment() : setOpen(true)
-              }
-              disabled={isSubmitting}
-            >
-              Editar
             </Button>
             <Button
               type="button"
