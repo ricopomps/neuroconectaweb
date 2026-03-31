@@ -119,7 +119,6 @@ export function CaseStudyStepIdentification({
           control={control}
           name="comorbidities"
           options={[
-            { value: "tea", label: "TEA" },
             { value: "tod", label: "TOD" },
             { value: "tdah", label: "TDAH" },
             { value: "dislalia", label: "Dislalia" },
