@@ -51,6 +51,7 @@ export function AssessmentsTab({
   const [nameForAssessment, setNameForAssessment] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
   const [url, setUrl] = useState<string>("");
+  const [selectedDocumentIds, setSelectedDocumentIds] = useState<string[]>([]);
 
   const setStudentFiles = (files: StudentFile[]) => {
     setDocuments(files);
@@ -88,9 +89,11 @@ export function AssessmentsTab({
       return;
     }
 
+    const documentsToSend = documents.filter(doc => selectedDocumentIds.includes(doc.id))
+
     setIsSubmitting(true);
     assessmentApi
-      .generateDoc(studentId, documents)
+      .generateDoc(studentId, documentsToSend)
       .then((response) => {
         setEditableContent(response);
         setGeneratedDoc(response);
@@ -302,7 +305,16 @@ export function AssessmentsTab({
             </Field>
             {documents.map((doc) => (
               <Field key={doc.id} orientation="horizontal">
-                <Checkbox id="terms-checkbox" name="terms-checkbox" />
+                <Checkbox id="terms-checkbox" name="terms-checkbox" checked={selectedDocumentIds.includes(doc.id)} onCheckedChange={() => {
+                  const selectedDocs = [...selectedDocumentIds];
+                  if (selectedDocs.includes(doc.id)) {
+                    const idx = selectedDocs.indexOf(doc.id)
+                    selectedDocs.splice(idx, 1);
+                  } else {
+                    selectedDocs.push(doc.id)
+                  }
+                  setSelectedDocumentIds(selectedDocs);
+                }}/>
                 <Label htmlFor="terms-checkbox">{doc.name}</Label>
               </Field>
             ))}
