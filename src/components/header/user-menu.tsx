@@ -1,6 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useAuth } from "@/contexts/auth";
 import { useMounted } from "@/hooks/use-mounted";
 import { AppRoutes } from "@/lib/routes";
@@ -9,7 +14,7 @@ import { PresetSelector } from "../preset-selector";
 import { ThemeToggle } from "../theme-toggle";
 
 export function UserMenu() {
-  const { user, institutions } = useAuth();
+  const { user, institutions, logout } = useAuth();
   const mounted = useMounted();
 
   const presets =
@@ -30,9 +35,22 @@ export function UserMenu() {
   return (
     <div className="ml-auto flex w-full gap-2 sm:justify-end">
       {user ? (
-        <div className="flex items-center">
-          <p>{user.name}</p>
-        </div>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="ghost" className="flex items-center">
+              {user.name}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-40">
+            <Button
+              variant="destructive"
+              className="w-full justify-start"
+              onClick={logout}
+            >
+              Logout
+            </Button>
+          </PopoverContent>
+        </Popover>
       ) : (
         <Link href={AppRoutes.LOGIN}>
           <Button className="w-full">Faça o Login!</Button>

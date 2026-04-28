@@ -1,4 +1,5 @@
 "use client";
+import { AppRoutes } from "@/lib/routes";
 import { Institution } from "@/models/institution";
 import { User } from "@/models/user";
 import { list as listInstitutions } from "@/network/api/institution";
@@ -91,6 +92,10 @@ export function AuthProvider({ children }: { readonly children: ReactNode }) {
 
     localStorage.removeItem("authToken");
     localStorage.removeItem("authUser");
+
+    if (globalThis.window !== undefined) {
+      globalThis.window.location.href = AppRoutes.LOGIN;
+    }
   }, []);
 
   useEffect(() => {
