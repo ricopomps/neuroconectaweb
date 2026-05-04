@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { formatDate } from "@/lib/utils";
+import { formatDate, getAge } from "@/lib/utils";
 import { Student } from "@/lib/validation/student";
 import { Edit2, X } from "lucide-react";
 import { useState } from "react";
@@ -117,6 +117,14 @@ export function StudentCard({ student }: StudentCardProps) {
               </p>
               <p className="text-base font-semibold">
                 {formatDate(student.createdAt)}
+              </p>
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-muted-foreground">
+                Idade:
+              </p>
+              <p className="text-base font-semibold">
+                {getAge(student.birthDate)}
               </p>
             </div>
           </div>

@@ -94,6 +94,7 @@ export function CaseStudyStepPedagogical({
             <option value="">Selecione</option>
             <option value="syllabic">Silábico</option>
             <option value="syllabic_alphabetic">Silábico-alfabético</option>
+            <option value="alphabetic_with_dificulties">Alfabético com dificuldades</option>
             <option value="alphabetic">Alfabético</option>
           </select>
         </div>

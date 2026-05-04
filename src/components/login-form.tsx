@@ -15,8 +15,10 @@ import { LoginRequest } from "@/lib/validation/auth";
 import * as authApi from "@/network/api/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { Eye, EyeOff } from "lucide-react";
 
 export function LoginForm({
   className,
@@ -66,6 +68,8 @@ export function LoginForm({
     }
   }
 
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -112,7 +116,7 @@ export function LoginForm({
                   {...register("email", { required: "Email obrigatório" })}
                 />
               </Field>
-              <Field>
+              <Field className="relative w-full">
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password">Senha</FieldLabel>
                   {/* <a
@@ -124,11 +128,25 @@ export function LoginForm({
                 </div>
                 <Input
                   id="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   required
                   disabled={isSubmitting}
                   {...register("password", { required: "Senha obrigatória" })}
+                  className="pr-10"
                 />
+                <div className="absolute top-10 left-75">
+                  {showPassword ? (
+                    <EyeOff
+                      size={18}
+                      onClick={() => setShowPassword((prev) => !prev)}
+                    />
+                  ) : (
+                    <Eye
+                      size={18}
+                      onClick={() => setShowPassword((prev) => !prev)}
+                    />
+                  )}
+                </div>
               </Field>
               <Field>
                 <Button type="submit" disabled={isSubmitting}>

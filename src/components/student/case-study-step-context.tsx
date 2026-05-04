@@ -49,6 +49,7 @@ export function CaseStudyStepContext({
             },
             { value: "social_challenges", label: "Desafios sociais" },
             { value: "restricted_interests", label: "Interesses restritos" },
+            { value: "emotional_dysregulation", label: "Desregulação emocional" },
             { value: "other", label: "Outros" },
           ]}
           className="grid grid-cols-2 gap-2"

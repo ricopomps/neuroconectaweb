@@ -6,6 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { StudentCaseStudy } from "@/lib/validation/student";
 import { Control, Controller, UseFormRegister } from "react-hook-form";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
+import { Info } from "lucide-react";
 
 function formatPhone(value: string) {
   const digits = value.replaceAll(/\D/g, "").slice(0, 11);
@@ -28,6 +35,27 @@ interface CaseStudyStepIdentificationProps {
   readonly register: UseFormRegister<StudentCaseStudy>;
 }
 
+interface InfoIconProps {
+  readonly title: string;
+  readonly description: string;
+}
+
+function InfoIcon({ title, description }: InfoIconProps) {
+  return (
+    <div className="flex items-center gap-1">
+      {title}
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Info className="w-4 h-4 cursor-pointer" />
+          </TooltipTrigger>
+          <TooltipContent>{description}</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    </div>
+  );
+}
+
 export function CaseStudyStepIdentification({
   register,
   control,
@@ -42,16 +70,16 @@ export function CaseStudyStepIdentification({
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="responsibleName">Tipo de responsável</Label>
+          <Label htmlFor="responsibleName">Responsável pelo estudante</Label>
           <select
             id="responsibleName"
             {...register("responsibleName")}
             className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <option value="">Selecione</option>
-            <option value="médico">Médico</option>
-            <option value="pai_responsável">Pai ou responsável</option>
-            <option value="professor">Professor</option>
+            <option value="médico">Pai/Mãe</option>
+            <option value="pai_responsável">Avós</option>
+            <option value="professor">Outros Parentes</option>
             <option value="outro">Outro</option>
           </select>
         </div>
@@ -119,9 +147,29 @@ export function CaseStudyStepIdentification({
           control={control}
           name="comorbidities"
           options={[
-            { value: "tod", label: "TOD" },
-            { value: "tdah", label: "TDAH" },
+            {
+              value: "tod",
+              label: (
+                <InfoIcon
+                  title="TOD"
+                  description="Transtorno Opositor Desafiador"
+                />
+              ),
+            },
+            {
+              value: "tdah",
+              label: (
+                <InfoIcon
+                  title="TDAH"
+                  description="Transtorno Déficit de Atenção e Hiperatividade"
+                />
+              ),
+            },
             { value: "dislalia", label: "Dislalia" },
+            { value: "ansiedade", label: "Ansiedade" },
+            { value: "depressao", label: "Depressão" },
+            { value: "dislexia", label: "Dislexia" },
+            { value: "discalculia", label: "Discalculia" },
             { value: "other", label: "Outros" },
           ]}
           className="grid grid-cols-2 gap-2"

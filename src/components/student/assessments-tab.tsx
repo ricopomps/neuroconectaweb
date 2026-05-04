@@ -185,6 +185,11 @@ export function AssessmentsTab({
     return content === generatedDoc;
   };
 
+  const downloadHtml = async (html: string) => {
+    const html2pdf = (await import("html2pdf.js")).default;
+    html2pdf().from(html).save();
+  }
+
   if (!openForm) {
     return (
       <div className="space-y-4">
@@ -242,7 +247,7 @@ export function AssessmentsTab({
             <Button
               type="button"
               variant="secondary"
-              onClick={() => window.open(url)}
+              onClick={() => downloadHtml(generatedDoc)}
               disabled={isSubmitting}
             >
               Baixar

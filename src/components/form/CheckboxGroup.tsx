@@ -3,10 +3,11 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
+import { ReactNode } from "react";
 
 type CheckboxOption = {
   value: string;
-  label: string;
+  label: ReactNode;
 };
 
 interface CheckboxGroupProps<T extends FieldValues> {

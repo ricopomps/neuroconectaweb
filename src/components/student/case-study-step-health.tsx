@@ -29,6 +29,7 @@ export function CaseStudyStepHealth({
           <option value="normal">Normal</option>
           <option value="complicated">Complicado</option>
           <option value="premature">Prematuro</option>
+          <option value="unknown">Informação Desconhecida</option>
         </select>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
