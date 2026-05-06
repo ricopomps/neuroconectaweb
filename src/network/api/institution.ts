@@ -1,4 +1,4 @@
-import { CreateInstitutionRequest } from "@/lib/validation/institution";
+import { CreateInstitutionRequest, UpdateInstitutionRequest } from "@/lib/validation/institution";
 import { UsersPaginated } from "@/lib/validation/user";
 import { Institution } from "@/models/institution";
 import api from "@/network/axiosInstance";
@@ -12,6 +12,11 @@ export async function create(data: CreateInstitutionRequest) {
 
 export async function list() {
   const response = await api.get<Institution[]>(baseUrl);
+  return response.data;
+}
+
+export async function update(institutionId: string, partialInstitution: UpdateInstitutionRequest) {
+  const response = await api.put(`${baseUrl}/${institutionId}`, partialInstitution);
   return response.data;
 }
 

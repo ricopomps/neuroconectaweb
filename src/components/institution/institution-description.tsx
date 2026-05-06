@@ -12,6 +12,8 @@ import { Label } from "@/components/ui/label";
 
 import { Institution } from "@/models/institution";
 import { Edit2 } from "lucide-react";
+import * as institutionApi from "@/network/api/institution";
+import { formatDate } from "@/lib/utils";
 
 interface InstitutionDescriptionProps {
   readonly institutionId: string;
@@ -35,15 +37,15 @@ function formatPhone(value: string) {
 
 // mocked default data used when demonstrating the form
 const mockInstitution: Institution = {
-  id: "visao-mock",
-  name: "Colégio Visão",
-  address: "Av. Dr. José Rufino, 241 - Estância, Recife - PE, CEP: 50771-600",
-  city: "Recife",
-  state: "PE",
-  phone: "(81) 3251-0169",
-  email: "administracao@colegiovisao.com.br",
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
+  id: '',
+  name: "",
+  address: "",
+  city: "",
+  state: "",
+  phone: "",
+  email: "",
+  createdAt: "",
+  updatedAt: "",
 };
 
 export function InstitutionDescription({
@@ -51,7 +53,7 @@ export function InstitutionDescription({
 }: InstitutionDescriptionProps) {
   const { institutions } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
-
+  
   const {
     register,
     handleSubmit,
@@ -61,12 +63,13 @@ export function InstitutionDescription({
   } = useForm<Institution>({
     defaultValues: mockInstitution,
   });
-
-  const institution = institutions?.find((inst) => inst.id === institutionId);
+  
+  const selectedInstitution = institutions?.find((inst) => inst.id === institutionId);
+  const [institution, setInstitution] = useState<Institution | undefined>(selectedInstitution);
 
   useEffect(() => {
     if (institution) {
-      reset({ ...mockInstitution, ...institution });
+      reset({ ...institution });
     } else {
       reset(mockInstitution);
     }
@@ -93,13 +96,22 @@ export function InstitutionDescription({
   };
 
   const handleCancel = () => {
-    reset({ ...mockInstitution, ...institution });
+    reset({ ...institution });
     setIsEditing(false);
   };
 
   const onSubmit = async (data: Institution) => {
     try {
-      console.log("Updating institution:", data);
+      const params = {
+        name: data.name,
+        address: data.address,
+        city: data.city,
+        state: data.state,
+        email: data.email,
+        phone: data.phone,
+      }
+      await institutionApi.update(data.id, params);
+      setInstitution(data);
       toast.success("Instituição atualizada com sucesso!");
       setIsEditing(false);
     } catch (error) {
@@ -189,7 +201,7 @@ export function InstitutionDescription({
                   Nome
                 </p>
                 <p className="text-base font-semibold">
-                  {institution.name ?? mockInstitution.name}
+                  {institution.name}
                 </p>
               </div>
 
@@ -198,7 +210,7 @@ export function InstitutionDescription({
                   Endereço
                 </p>
                 <p className="text-base font-semibold">
-                  {institution.address ?? mockInstitution.address}
+                  {institution.address}
                 </p>
               </div>
 
@@ -207,7 +219,7 @@ export function InstitutionDescription({
                   Cidade
                 </p>
                 <p className="text-base font-semibold">
-                  {institution.city ?? mockInstitution.city}
+                  {institution.city}
                 </p>
               </div>
 
@@ -216,7 +228,7 @@ export function InstitutionDescription({
                   Estado
                 </p>
                 <p className="text-base font-semibold">
-                  {institution.state ?? mockInstitution.state}
+                  {institution.state}
                 </p>
               </div>
 
@@ -225,7 +237,7 @@ export function InstitutionDescription({
                   Telefone
                 </p>
                 <p className="text-base font-semibold">
-                  {institution.phone ?? mockInstitution.phone}
+                  {institution.phone}
                 </p>
               </div>
 
@@ -234,7 +246,7 @@ export function InstitutionDescription({
                   E-mail
                 </p>
                 <p className="text-base font-semibold">
-                  {institution.email ?? mockInstitution.email}
+                  {institution.email}
                 </p>
               </div>
 
@@ -243,7 +255,7 @@ export function InstitutionDescription({
                   Criado em
                 </p>
                 <p className="text-base font-semibold">
-                  {new Date(institution.createdAt).toLocaleDateString()}
+                  {formatDate(institution.createdAt)}
                 </p>
               </div>
               <div className="space-y-2">
@@ -251,7 +263,7 @@ export function InstitutionDescription({
                   Atualizado em
                 </p>
                 <p className="text-base font-semibold">
-                  {new Date(institution.updatedAt).toLocaleDateString()}
+                  {formatDate(institution.updatedAt)}
                 </p>
               </div>
             </div>
