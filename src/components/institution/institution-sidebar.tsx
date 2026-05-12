@@ -65,6 +65,13 @@ export function InstitutionSidebar({
       {
         title: "Usuários",
         url: buildRoute(AppRoutes.INSTITUTIONS_USERS, { institutionId }),
+        items: [
+          {
+            title: "Meu Perfil",
+            url: buildRoute(AppRoutes.MY_PROFILE, { institutionId }),
+            isActive: true,
+          },
+        ],
       },
       {
         title: "Relatório de Auditoria",

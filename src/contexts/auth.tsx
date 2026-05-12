@@ -16,6 +16,7 @@ import {
 interface AuthContextType {
   token: string | null;
   user: User | null;
+  setUser: (user: User) => void;
   setAuth: (token: string, user: User) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
@@ -112,6 +113,7 @@ export function AuthProvider({ children }: { readonly children: ReactNode }) {
     () => ({
       token,
       user,
+      setUser,
       setAuth,
       logout,
       isLoading,
@@ -122,6 +124,7 @@ export function AuthProvider({ children }: { readonly children: ReactNode }) {
     [
       token,
       user,
+      setUser,
       setAuth,
       logout,
       isLoading,

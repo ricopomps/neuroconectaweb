@@ -7,6 +7,7 @@ export enum AppRoutes {
   STUDENTS = "/institutions/:institutionId/students",
   ASSESSMENTS = "/institutions/:institutionId/assessments",
   INSTITUTIONS_USERS = "/institutions/:institutionId/users",
+  MY_PROFILE = "/institutions/:institutionId/my-profile",
   STUDENT_PAGE = "/institutions/:institutionId/students/:studentId",
   AUDIT_REPORT = "/institutions/:institutionId/audit-report",
 }

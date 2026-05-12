@@ -22,3 +22,12 @@ export async function create(data: {
   const response = await api.post<SignupResponse>(baseUrl, data);
   return response.data;
 }
+
+export async function update(id: string, data: {
+  name: string;
+  email: string;
+  password: string;
+}) {
+  const response = await api.put<SignupResponse>(`${baseUrl}/${id}`, data);
+  return response.data;
+}
