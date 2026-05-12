@@ -190,7 +190,10 @@ export function AssessmentsTab({
   if (!openForm) {
     return (
       <div className="space-y-4">
-        <Card style={{ cursor: "pointer" }} onClick={() => setOpenForm(true)}>
+        <Card style={{ cursor: "pointer" }} onClick={() => { 
+            setSelectedAssessmentId('');
+            setOpenForm(true)
+          }}>
           <CardContent>
             <div className="items-center">
               <p className="font-semibold">
