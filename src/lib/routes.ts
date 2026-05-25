@@ -10,6 +10,7 @@ export enum AppRoutes {
   MY_PROFILE = "/institutions/:institutionId/my-profile",
   STUDENT_PAGE = "/institutions/:institutionId/students/:studentId",
   AUDIT_REPORT = "/institutions/:institutionId/audit-report",
+  FORGOT_PASSWORD = "/auth/forgot-password",
 }
 
 export const buildRoute = (
