@@ -51,17 +51,17 @@ export function InstitutionSidebar({
         title: "Alunos",
         url: buildRoute(AppRoutes.STUDENTS, { institutionId }),
       },
-      {
-        title: "Avaliações",
-        url: buildRoute(AppRoutes.ASSESSMENTS, { institutionId }),
-        items: [
-          {
-            title: "PAEE",
-            url: buildRoute(AppRoutes.ASSESSMENTS, { institutionId }),
-            isActive: true,
-          },
-        ],
-      },
+      //   {
+      //     title: "Avaliações",
+      //     url: buildRoute(AppRoutes.ASSESSMENTS, { institutionId }),
+      //     items: [
+      //       {
+      //         title: "PAEE",
+      //         url: buildRoute(AppRoutes.ASSESSMENTS, { institutionId }),
+      //         isActive: true,
+      //       },
+      //     ],
+      //   },
       {
         title: "Usuários",
         url: buildRoute(AppRoutes.INSTITUTIONS_USERS, { institutionId }),

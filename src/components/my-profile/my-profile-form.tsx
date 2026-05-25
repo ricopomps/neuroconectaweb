@@ -1,26 +1,21 @@
 "use client";
-import * as userApi from "@/network/api/user";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@/contexts/auth";
 import { UserWithPassword } from "@/models/user";
+import * as authApi from "@/network/api/auth";
+import * as userApi from "@/network/api/user";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { useAuth } from "@/contexts/auth";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Edit2, Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
-
-interface StudentCreateModalProps {
-  readonly institutionId: string;
-}
 
 export function MyProfileForm() {
   const { user, setUser } = useAuth();
   const {
     register,
     handleSubmit,
-    control,
     formState: { isSubmitting },
   } = useForm<UserWithPassword>({
     defaultValues: {
@@ -30,6 +25,7 @@ export function MyProfileForm() {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [isForgotSubmitting, setIsForgotSubmitting] = useState(false);
 
   async function onSubmit(data: UserWithPassword) {
     try {
@@ -39,14 +35,37 @@ export function MyProfileForm() {
       }
       await userApi.update(user?.id, data);
       setUser({
-          ...user,
-          name: data.name,
-          email: data.email,
+        ...user,
+        name: data.name,
+        email: data.email,
       });
       toast.success("Perfil atualizado");
     } catch (error) {
       if (error instanceof Error)
         toast.error(error.message || "Erro ao cadastrar");
+    }
+  }
+
+  async function handleForgotPassword() {
+    if (!user?.email) {
+      toast.error("Email do usuário não disponível para recuperar senha");
+      return;
+    }
+
+    try {
+      setIsForgotSubmitting(true);
+      await authApi.forgotPassword(user.email);
+      toast.success(
+        "Um email para troca de senha foi enviado para o email cadastrado",
+      );
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message || "Erro ao solicitar troca de senha");
+      } else {
+        toast.error("Erro ao solicitar troca de senha");
+      }
+    } finally {
+      setIsForgotSubmitting(false);
     }
   }
 
@@ -64,33 +83,21 @@ export function MyProfileForm() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="email-1">Email</Label>
-              <Input id="email-1" {...register("email")} />
+              <Input disabled id="email-1" {...register("email")} />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative w-full">
-              <div className="space-y-2">
-                <Label htmlFor="pass-1">Senha</Label>
-                <Input
-                  id="pass-1"
-                  type={showPassword ? "text" : "password"}
-                  {...register("password")}
-                />
-                <div className="absolute top-8 left-68">
-                  {showPassword ? (
-                    <EyeOff
-                      size={18}
-                      onClick={() => setShowPassword((prev) => !prev)}
-                    />
-                  ) : (
-                    <Eye
-                      size={18}
-                      onClick={() => setShowPassword((prev) => !prev)}
-                    />
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className="flex gap-2 justify-end pt-4">
-              <Button type="submit" disabled={isSubmitting}>
+            <div className="flex gap-2 justify-between pt-4">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={handleForgotPassword}
+                disabled={isForgotSubmitting || isSubmitting}
+              >
+                {isForgotSubmitting ? "Enviando..." : "Trocar Senha"}
+              </Button>
+              <Button
+                type="submit"
+                disabled={isSubmitting || isForgotSubmitting}
+              >
                 {isSubmitting ? "Salvando..." : "Atualizar"}
               </Button>
             </div>

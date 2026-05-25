@@ -42,6 +42,11 @@ export function UserMenu() {
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-40">
+            <Link href={AppRoutes.MY_PROFILE}>
+              <Button variant="ghost" className="w-full justify-start">
+                Meu Perfil
+              </Button>
+            </Link>
             <Button
               variant="destructive"
               className="w-full justify-start"

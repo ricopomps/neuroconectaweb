@@ -15,3 +15,18 @@ export async function login(email: string, password: string) {
   });
   return response.data;
 }
+
+export async function forgotPassword(email: string) {
+  const response = await api.post(`${baseUrl}/forgot-password`, {
+    email,
+  });
+  return response.data;
+}
+
+export async function resetPassword(token: string, password: string) {
+  const response = await api.post(`${baseUrl}/reset-password`, {
+    token,
+    password,
+  });
+  return response.data;
+}
