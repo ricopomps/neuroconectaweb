@@ -15,6 +15,7 @@ import {
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
 import {
   AssessmentWithUrl,
   StudentTabProps,
@@ -25,7 +26,7 @@ import * as studentApi from "@/network/api/student";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { PlusIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export function AssessmentsTab({
@@ -42,6 +43,7 @@ export function AssessmentsTab({
   const [openForm, setOpenForm] = useState(false);
   const [documents, setDocuments] = useState<StudentFile[]>([]);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [generatedDoc, setGeneratedDoc] = useState<string>("");
   const [assessmentsDone, setAssessmentsDone] = useState<AssessmentWithUrl[]>(
@@ -57,24 +59,27 @@ export function AssessmentsTab({
     setDocuments(files);
   };
 
-  const getAssessments = async () => {
+  const getAssessments = useCallback(async () => {
     const assessments = await assessmentApi.getAssessments(studentId);
     setAssessmentsDone(assessments);
-  };
+  }, [studentId]);
 
   useEffect(() => {
     async function fetchDocuments() {
       try {
+        setIsLoading(true);
         const response = await studentApi.getFiles(institutionId, studentId);
         setStudentFiles(response.files);
         await getAssessments();
       } catch (error) {
         console.error("Failed to fetch documents:", error);
         setStudentFiles([]);
+      } finally {
+        setIsLoading(false);
       }
     }
     fetchDocuments();
-  }, [studentId, institutionId]);
+  }, [studentId, institutionId, getAssessments]);
 
   const validateStudentCaseStudy = () => {
     return !!caseStudy;
@@ -188,12 +193,28 @@ export function AssessmentsTab({
   };
 
   if (!openForm) {
+    if (isLoading) {
+      return (
+        <div className="flex items-center justify-center py-12">
+          <div className="flex flex-col items-center gap-2">
+            <Spinner className="size-8" />
+            <p className="text-sm text-muted-foreground">
+              Carregando avaliações...
+            </p>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="space-y-4">
-        <Card style={{ cursor: "pointer" }} onClick={() => { 
-            setSelectedAssessmentId('');
-            setOpenForm(true)
-          }}>
+        <Card
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            setSelectedAssessmentId("");
+            setOpenForm(true);
+          }}
+        >
           <CardContent>
             <div className="items-center">
               <p className="font-semibold">
@@ -202,24 +223,41 @@ export function AssessmentsTab({
             </div>
           </CardContent>
         </Card>
-        {assessmentsDone.map((assessment) => (
-          <Card
-            key={assessment.id}
-            style={{ cursor: "pointer" }}
-            onClick={() => editAssessment(assessment)}
-          >
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <p className="font-semibold">{assessment.name}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {new Date(assessment.createdAt).toLocaleDateString("pt-BR")}
-                  </p>
-                </div>
+        {assessmentsDone.length === 0 ? (
+          <Card>
+            <CardContent className="py-8">
+              <div className="flex flex-col items-center justify-center gap-2 text-center">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Nenhuma avaliação criada ainda
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Clique no botão acima para gerar uma nova avaliação
+                </p>
               </div>
             </CardContent>
           </Card>
-        ))}
+        ) : (
+          assessmentsDone.map((assessment) => (
+            <Card
+              key={assessment.id}
+              style={{ cursor: "pointer" }}
+              onClick={() => editAssessment(assessment)}
+            >
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <p className="font-semibold">{assessment.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {new Date(assessment.createdAt).toLocaleDateString(
+                        "pt-BR",
+                      )}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        )}
       </div>
     );
   }

@@ -3,11 +3,11 @@
 import { Pagination } from "@/components/pagination";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 import { StudentTabProps } from "@/lib/validation/assessments";
 import { StudentFile } from "@/lib/validation/student";
 import * as studentApi from "@/network/api/student";
 import { File, Trash2, Upload } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -97,77 +97,91 @@ export function DocumentsTab({ institutionId, studentId }: StudentTabProps) {
     toast.success("Documento removido com sucesso");
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="flex flex-col items-center gap-2">
+          <Spinner className="size-8" />
+          <p className="text-sm text-muted-foreground">
+            Carregando documentos...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <>
-          <div className="flex items-center justify-center w-full ">
-            <label className="bg-background/50 flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-muted-foreground/25 rounded-lg cursor-pointer  hover:bg-muted transition-colors">
-              <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                <Upload className="h-8 w-8 mb-2 text-muted-foreground" />
-                <p className="mb-2 text-sm text-muted-foreground">
-                  <span className="font-semibold">Clique para enviar</span> ou
-                  arraste um arquivo
+      <div className="flex items-center justify-center w-full ">
+        <label className="bg-background/50 flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-muted-foreground/25 rounded-lg cursor-pointer  hover:bg-muted transition-colors">
+          <div className="flex flex-col items-center justify-center pt-5 pb-6">
+            <Upload className="h-8 w-8 mb-2 text-muted-foreground" />
+            <p className="mb-2 text-sm text-muted-foreground">
+              <span className="font-semibold">Clique para enviar</span> ou
+              arraste um arquivo
+            </p>
+            <p className="text-xs text-muted-foreground">
+              PDF, DOC, DOCX, XLS, XLSX (até 10 MB)
+            </p>
+          </div>
+          <input
+            type="file"
+            className="hidden"
+            onChange={handleUpload}
+            disabled={isUploading}
+            accept=".pdf,.doc,.docx,.xls,.xlsx"
+          />
+        </label>
+      </div>
+
+      <div className="space-y-3">
+        <h3 className="font-semibold text-sm">Documentos Enviados</h3>
+        {documents.length === 0 ? (
+          <Card>
+            <CardContent className="py-8">
+              <div className="flex flex-col items-center justify-center gap-2 text-center">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Nenhum documento enviado ainda
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  PDF, DOC, DOCX, XLS, XLSX (até 10 MB)
+                  Use a área de upload acima para adicionar documentos
                 </p>
               </div>
-              <input
-                type="file"
-                className="hidden"
-                onChange={handleUpload}
-                disabled={isUploading}
-                accept=".pdf,.doc,.docx,.xls,.xlsx"
-              />
-            </label>
-          </div>
-
-          <div className="space-y-3">
-            <h3 className="font-semibold text-sm">Documentos Enviados</h3>
-            {documents.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">
-                Nenhum documento enviado ainda
-              </p>
-            ) : (
-              documents.map((doc) => (
-                <Card key={doc.id}>
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <File className="h-5 w-5 text-muted-foreground" />
-                        <div>
-                          <p className="font-semibold text-sm">{doc.name}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {new Date(doc.createdAt).toLocaleDateString(
-                              "pt-BR",
-                            )}
-                          </p>
-                        </div>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDelete(doc.id)}
-                        className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+            </CardContent>
+          </Card>
+        ) : (
+          documents.map((doc) => (
+            <Card key={doc.id}>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <File className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <p className="font-semibold text-sm">{doc.name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(doc.createdAt).toLocaleDateString("pt-BR")}
+                      </p>
                     </div>
-                  </CardContent>
-                </Card>
-              ))
-            )}
-          </div>
-          <Pagination
-            itemsPerPage={itemsPerPage}
-            totalItems={totalItems}
-            disableScroll
-          />
-        </>
-      )}
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleDelete(doc.id)}
+                    className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </div>
+      <Pagination
+        itemsPerPage={itemsPerPage}
+        totalItems={totalItems}
+        disableScroll
+      />
     </div>
   );
 }
