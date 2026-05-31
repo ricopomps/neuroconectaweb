@@ -122,7 +122,7 @@ export interface StudentCaseStudy {
   strengths?: string;
   difficulties?: string;
   currentSupports?: string;
-  autismCharacteristics?: string[];
+  neurodivergentCharacteristics?: string[];
 
   // SÍNTESE FINAL
   aeeOpinion?: string;

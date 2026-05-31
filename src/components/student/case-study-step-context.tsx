@@ -30,10 +30,10 @@ export function CaseStudyStepContext({
         <Textarea id="currentSupports" {...register("currentSupports")} />
       </div>
       <div className="space-y-2">
-        <Label>Características do Autismo</Label>
+        <Label>Características Neurodivergentes</Label>
         <CheckboxGroup
           control={control}
-          name="autismCharacteristics"
+          name="neurodivergentCharacteristics"
           options={[
             {
               value: "repetitive_behaviors",
@@ -49,7 +49,11 @@ export function CaseStudyStepContext({
             },
             { value: "social_challenges", label: "Desafios sociais" },
             { value: "restricted_interests", label: "Interesses restritos" },
-            { value: "emotional_dysregulation", label: "Desregulação emocional" },
+            {
+              value: "emotional_dysregulation",
+              label: "Desregulação emocional",
+            },
+            { value: "ecolalia", label: "Ecolalia" },
             { value: "other", label: "Outros" },
           ]}
           className="grid grid-cols-2 gap-2"
