@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { StudentCaseStudy } from "@/lib/validation/student";
+import { Info } from "lucide-react";
 import {
   Control,
   Controller,
@@ -18,7 +19,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
-import { Info } from "lucide-react";
 
 function formatPhone(value: string) {
   const digits = value.replaceAll(/\D/g, "").slice(0, 11);
@@ -81,10 +81,7 @@ export function CaseStudyStepIdentification({
     const trimmedDiagnosis = diagnosis.diagnosis?.trim();
     const trimmedResponsible = diagnosis.responsible?.trim();
 
-    return !!(
-      trimmedDiagnosis?.length &&
-      trimmedResponsible?.length
-    );
+    return !!(trimmedDiagnosis?.length && trimmedResponsible?.length);
   });
 
   return (
@@ -180,9 +177,7 @@ export function CaseStudyStepIdentification({
                 className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end"
               >
                 <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor={`diagnosis-${field.id}`}>
-                    Diagnóstico
-                  </Label>
+                  <Label htmlFor={`diagnosis-${field.id}`}>Diagnóstico</Label>
                   <Input
                     id={`diagnosis-${field.id}`}
                     {...register(`diagnoses.${index}.diagnosis`)}
