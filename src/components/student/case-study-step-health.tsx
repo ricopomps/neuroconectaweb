@@ -32,6 +32,19 @@ export function CaseStudyStepHealth({
           <option value="unknown">Informação Desconhecida</option>
         </select>
       </div>
+      <div className="space-y-2">
+        <Label htmlFor="pregnancyType">Tipo de gestação</Label>
+        <select
+          id="pregnancyType"
+          {...register("pregnancyType")}
+          className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm"
+        >
+          <option value="">Selecione</option>
+          <option value="normal">Normal</option>
+          <option value="cesarean">Cesário</option>
+          <option value="adoption">Adoção</option>
+        </select>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="space-y-2">
           <Label htmlFor="walkingDevelopment">Andar</Label>
