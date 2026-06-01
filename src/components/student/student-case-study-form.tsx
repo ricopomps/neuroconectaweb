@@ -49,7 +49,7 @@ export function StudentCaseStudyForm({
     formState: { isSubmitting },
   } = useForm<StudentCaseStudy>({
     defaultValues: {
-      hasDiagnosis: false,
+      diagnoses: [],
       usesMedication: false,
       medicationAtSchool: false,
       foodSelectivity: false,
@@ -73,15 +73,26 @@ export function StudentCaseStudyForm({
   }, [institutionId, studentId, reset, setCaseStudy]);
 
   const onSubmit = async (data: StudentCaseStudy) => {
+    const cleanedDiagnoses = data.diagnoses?.filter(
+      (diagnosis) =>
+        (diagnosis?.diagnosis?.trim().length ?? 0) > 0 ||
+        (diagnosis?.responsible?.trim().length ?? 0) > 0,
+    );
+
+    const payload = {
+      ...data,
+      diagnoses: cleanedDiagnoses?.length ? cleanedDiagnoses : undefined,
+    };
+
     try {
       if (caseStudy) {
-        await caseStudyApi.updateCaseStudy(institutionId, studentId, data);
+        await caseStudyApi.updateCaseStudy(institutionId, studentId, payload);
         toast.success("Estudo de caso atualizado com sucesso!");
       } else {
         const newCaseStudy = await caseStudyApi.createCaseStudy(
           institutionId,
           studentId,
-          data,
+          payload,
         );
         toast.success("Estudo de caso criado com sucesso!");
         setCaseStudy(newCaseStudy);

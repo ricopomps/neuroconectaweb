@@ -23,6 +23,11 @@ export interface StudentFilesPaginated {
   count: number;
 }
 
+export interface StudentDiagnosis {
+  diagnosis?: string;
+  responsible?: string;
+}
+
 export interface StudentCaseStudy {
   id: string;
   studentId: string;
@@ -33,8 +38,7 @@ export interface StudentCaseStudy {
   responsiblePhone?: string;
   responsibleEmail?: string;
   referredBy?: "teacher" | "family" | "technical_team";
-  hasDiagnosis?: boolean;
-  diagnosis?: string;
+  diagnoses?: StudentDiagnosis[];
   comorbidities?: string[];
   developmentStage?:
     | "pre_operational"

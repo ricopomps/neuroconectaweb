@@ -1,11 +1,17 @@
 "use client";
 
 import { CheckboxGroup } from "@/components/form/CheckboxGroup";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { StudentCaseStudy } from "@/lib/validation/student";
-import { Control, Controller, UseFormRegister } from "react-hook-form";
+import {
+  Control,
+  Controller,
+  UseFormRegister,
+  useFieldArray,
+  useWatch,
+} from "react-hook-form";
 import {
   Tooltip,
   TooltipContent,
@@ -60,6 +66,27 @@ export function CaseStudyStepIdentification({
   register,
   control,
 }: CaseStudyStepIdentificationProps) {
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "diagnoses",
+  });
+
+  const diagnosesValues = useWatch({ control, name: "diagnoses" }) ?? [];
+
+  const canAppendDiagnosis = diagnosesValues.every((diagnosis) => {
+    if (!diagnosis) {
+      return false;
+    }
+
+    const trimmedDiagnosis = diagnosis.diagnosis?.trim();
+    const trimmedResponsible = diagnosis.responsible?.trim();
+
+    return !!(
+      trimmedDiagnosis?.length &&
+      trimmedResponsible?.length
+    );
+  });
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -123,23 +150,65 @@ export function CaseStudyStepIdentification({
           </select>
         </div>
       </div>
-      <div className="flex items-center space-x-2">
-        <Controller
-          control={control}
-          name="hasDiagnosis"
-          render={({ field }) => (
-            <Checkbox
-              id="hasDiagnosis"
-              checked={field.value ?? false}
-              onCheckedChange={field.onChange}
-            />
-          )}
-        />
-        <Label htmlFor="hasDiagnosis">Possui laudo</Label>
-      </div>
       <div className="space-y-2">
-        <Label htmlFor="diagnosis">Diagnóstico</Label>
-        <Input id="diagnosis" {...register("diagnosis")} />
+        <div className="flex items-center justify-between gap-4">
+          <Label>Diagnósticos</Label>
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            disabled={!canAppendDiagnosis}
+            onClick={() => append({ diagnosis: "", responsible: "" })}
+          >
+            Adicionar diagnóstico
+          </Button>
+        </div>
+        {!canAppendDiagnosis && (
+          <p className="text-sm text-muted-foreground">
+            Preencha todos os diagnósticos atuais antes de adicionar outro.
+          </p>
+        )}
+        {fields.length === 0 ? (
+          <p className="text-sm text-muted-foreground">
+            Nenhum diagnóstico adicionado.
+          </p>
+        ) : (
+          <div className="space-y-4">
+            {fields.map((field, index) => (
+              <div
+                key={field.id}
+                className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end"
+              >
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor={`diagnosis-${field.id}`}>
+                    Diagnóstico
+                  </Label>
+                  <Input
+                    id={`diagnosis-${field.id}`}
+                    {...register(`diagnoses.${index}.diagnosis`)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor={`responsible-diagnosis-${field.id}`}>
+                    Responsável pelo diagnóstico
+                  </Label>
+                  <Input
+                    id={`responsible-diagnosis-${field.id}`}
+                    {...register(`diagnoses.${index}.responsible`)}
+                  />
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="h-10 self-end"
+                  onClick={() => remove(index)}
+                >
+                  Remover
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       <div className="space-y-2">
         <Label>Comorbidades</Label>
