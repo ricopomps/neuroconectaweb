@@ -50,7 +50,7 @@ export interface StudentCaseStudy {
   // ANAMNESE
   pregnancyHistory?: string;
   pregnancyType?: string;
-  developmentMilestones?: string;
+  observations?: string;
   healthHistory?: string;
 
   // DESENVOLVIMENTO

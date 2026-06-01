@@ -162,11 +162,8 @@ export function CaseStudyStepHealth({
         </div>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="developmentMilestones">Desenvolvimento</Label>
-        <Textarea
-          id="developmentMilestones"
-          {...register("developmentMilestones")}
-        />
+        <Label htmlFor="observations">Observações</Label>
+        <Textarea id="observations" {...register("observations")} />
       </div>
       <div className="space-y-2">
         <Label htmlFor="healthHistory">Saúde geral</Label>
