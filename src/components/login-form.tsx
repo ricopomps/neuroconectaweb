@@ -48,7 +48,12 @@ export function LoginForm({
     // },
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+
   async function onSubmit(data: LoginRequest) {
+    setSubmitError("");
+
     try {
       const loginResponse = await authApi.login(data.email, data.password);
       if (loginResponse.token && loginResponse.user) {
@@ -59,16 +64,16 @@ export function LoginForm({
         router.push(AppRoutes.HOME);
       }
     } catch (error) {
-      console.error("Login failed:", error);
-      if (error instanceof Error) {
-        toast.error(error.message || "Erro ao fazer login");
-      } else {
-        toast.error("Erro ao fazer login");
-      }
+      const message =
+        error instanceof Error
+          ? error.message ||
+            "Senha incorreta. Verifique sua senha e tente novamente."
+          : "Senha incorreta. Verifique sua senha e tente novamente.";
+
+      setSubmitError(message);
+      toast.error(message);
     }
   }
-
-  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -77,7 +82,7 @@ export function LoginForm({
           <CardTitle className="text-xl">Bem vindo</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit)} noValidate>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -122,6 +127,13 @@ export function LoginForm({
                   )}
                 </div>
               </Field>
+
+              {submitError ? (
+                <p className="text-sm text-destructive" role="alert">
+                  {submitError}
+                </p>
+              ) : null}
+
               <Field>
                 <Button type="submit" disabled={isSubmitting}>
                   {isSubmitting ? "Entrando..." : "Login"}
@@ -135,10 +147,6 @@ export function LoginForm({
           </form>
         </CardContent>
       </Card>
-      {/* <FieldDescription className="px-6 text-center">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
-      </FieldDescription> */}
     </div>
   );
 }

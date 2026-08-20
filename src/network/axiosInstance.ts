@@ -5,6 +5,7 @@ import {
   ConflictError,
   NotFoundError,
   TooManyRequestsError,
+  UnauthorizedError,
 } from "./http-errors";
 
 const axiosInstace = axios.create({
@@ -26,17 +27,25 @@ axiosInstace.interceptors.request.use((config) => {
 
 axiosInstace.interceptors.response.use(null, (error) => {
   if (axios.isAxiosError(error)) {
-    const errorMessage = error.response?.data?.error;
+    const errorMessage = error.response?.data?.error ?? "Erro inesperado";
+    const requestUrl = error.config?.url ?? "";
+    const normalizedUrl = requestUrl.startsWith("/")
+      ? requestUrl
+      : `/${requestUrl}`;
+    const isLoginRequest = /(^|\/)auth\/login($|\?)/i.test(normalizedUrl);
 
     if (error.response?.status === 401) {
-      if (globalThis.window !== undefined) {
-        localStorage.removeItem("authToken");
-        localStorage.removeItem("authUser");
+      if (!isLoginRequest && globalThis.window !== undefined) {
+        const currentPath = globalThis.window.location.pathname;
+
+        if (currentPath !== AppRoutes.LOGIN) {
+          localStorage.removeItem("authToken");
+          localStorage.removeItem("authUser");
+          globalThis.window.location.href = AppRoutes.LOGIN;
+        }
       }
 
-      if (globalThis.window !== undefined) {
-        globalThis.window.location.href = AppRoutes.LOGIN;
-      }
+      throw new UnauthorizedError(errorMessage);
     }
 
     switch (error.response?.status) {

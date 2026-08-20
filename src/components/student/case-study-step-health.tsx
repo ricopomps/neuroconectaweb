@@ -33,7 +33,7 @@ export function CaseStudyStepHealth({
         </select>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="pregnancyType">Tipo de gestação</Label>
+        <Label htmlFor="pregnancyType">Tipo de parto</Label>
         <select
           id="pregnancyType"
           {...register("pregnancyType")}

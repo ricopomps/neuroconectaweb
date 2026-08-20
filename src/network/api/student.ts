@@ -1,11 +1,15 @@
-import { Student, StudentFilesPaginated, StudentWithCases } from "@/lib/validation/student";
+import {
+  Student,
+  StudentFilesPaginated,
+  StudentWithCases,
+} from "@/lib/validation/student";
 import api from "@/network/axiosInstance";
 
 const baseUrl = "students";
 
 export async function create(
   institutionId: string,
-  data: { name: string; birthDate: Date },
+  data: { name: string; birthDate: Date; segment?: string },
 ) {
   const response = await api.post<Student>(
     `${baseUrl}/${institutionId}/students`,
@@ -47,6 +51,18 @@ export async function generateAssessment(
 ) {
   const response = await api.post<Student>(
     `${baseUrl}/${studentId}/assessment`,
+    data,
+  );
+  return response.data;
+}
+
+export async function update(
+  institutionId: string,
+  studentId: string,
+  data: { name?: string; birthDate?: Date; segment?: string },
+) {
+  const response = await api.put<Student>(
+    `${baseUrl}/${institutionId}/students/${studentId}`,
     data,
   );
   return response.data;

@@ -55,6 +55,8 @@ export function StudentCaseStudyForm({
       foodSelectivity: false,
       responsiblePhone: "",
       informantPhone: "",
+      neurodivergentCharacteristics: [],
+      neurodivergentObservations: {},
     },
   });
 

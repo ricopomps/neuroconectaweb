@@ -3,6 +3,8 @@ export interface Student {
   name: string;
   birthDate: Date;
   institutionId: string;
+  segment?: string;
+  photoUrl?: string;
   createdAt: string;
 }
 
@@ -128,6 +130,7 @@ export interface StudentCaseStudy {
   difficulties?: string;
   currentSupports?: string;
   neurodivergentCharacteristics?: string[];
+  neurodivergentObservations?: Record<string, string>;
 
   // SÍNTESE FINAL
   aeeOpinion?: string;

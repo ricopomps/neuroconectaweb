@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { STUDENT_SEGMENT_OPTIONS } from "@/lib/student-segments";
 import { Student } from "@/lib/validation/student";
 import * as studentApi from "@/network/api/student";
 import { Plus } from "lucide-react";
@@ -34,12 +35,25 @@ export function StudentCreateModal({
     handleSubmit,
     control,
     formState: { isSubmitting },
-  } = useForm<Student>({});
+  } = useForm<Student>({
+    defaultValues: {
+      segment: "",
+    },
+  });
 
   const [open, setOpen] = useState(false);
   async function onSubmit(data: Student) {
     try {
-      const studentResponse = await studentApi.create(institutionId, data);
+      const studentPayload = {
+        ...data,
+        segment: data.segment?.trim() || undefined,
+      };
+
+      const studentResponse = await studentApi.create(
+        institutionId,
+        studentPayload,
+      );
+
       if (studentResponse?.id) {
         toast.success("Cadastro realizado com sucesso!");
         handleCreate(studentResponse);
@@ -70,6 +84,21 @@ export function StudentCreateModal({
             <div className="grid gap-3">
               <Label htmlFor="name-1">Nome</Label>
               <Input id="name-1" {...register("name")} />
+            </div>
+            <div className="grid gap-3">
+              <Label htmlFor="segment">Segmento</Label>
+              <select
+                id="segment"
+                {...register("segment")}
+                className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm"
+              >
+                <option value="">Selecione</option>
+                {STUDENT_SEGMENT_OPTIONS.map((segment) => (
+                  <option key={segment} value={segment}>
+                    {segment}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="grid gap-3 mb-4">
               <DatePicker<Student>
